@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refuerzo de la Unidad 3 — 2BGU — Evaluación ADA</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%231B2A5A'/><text x='50' y='70' font-size='55' text-anchor='middle' fill='%23D9B14B' font-family='Georgia'>E</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+/* ═══ PALETA IB ACTUALIZADA (patrón aprendido) ═══ */
+--bg:#f8f6f1;--bg-2:#eee9df;--paper:#ffffff;--ink:#1a1a1a;--ink-soft:#3a4a44;
+--muted:#5a6478;--gold:#b8842a;--gold-bright:#d9a23e;--forest:#1e7a3c;
+--forest-deep:#1b2a5a;--sage:#5d8a6b;--red:#b5453a;--error-soft:#f8eaea;
+--ok:#1e7a3c;--ok-soft:#e8f5e9;--border:#e0ddd4;--shadow:0 18px 50px -20px rgba(28,43,39,.18);
+--demand:#1e40af;--supply:#b45309;--world:#2e7d32;--surplus:#7b2cbf;
+/* ═══ NUEVOS COLORES IB ═══ */
+--navy:#1b2a5a;--burgundy:#8e1b3a;--green-brand:#1e7a3c;--gold-brand:#d9b14b;
+--hairline:#e5e8ef;--label-gray:#5a6478;--cream:#fdf8e8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg);background-image:none;min-height:100vh;overflow-x:hidden;line-height:1.15;font-size:11pt}
+body::before{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");opacity:.5;pointer-events:none;z-index:0;mix-blend-mode:multiply}
+.container{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:32px 24px 80px}
+.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:18px;border-bottom:2px solid var(--navy)}
+.brand-left{display:flex;align-items:center;gap:14px}
+.brand-mark{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--gold-bright),var(--gold) 70%,#6b4a16);display:grid;place-items:center;color:#fbf6ea;font-family:'Fraunces',serif;font-weight:900;font-size:20px;box-shadow:0 6px 18px -6px rgba(184,132,42,.55),inset 0 -3px 8px rgba(0,0,0,.2)}
+.brand-text{font-family:'Fraunces',serif;line-height:1.1}
+.brand-text.t1{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:500}
+.brand-text.t2{font-size:20px;font-weight:700;color:var(--navy)}
+.brand-right{font-size:12px;color:var(--muted);text-align:right;font-family:'Outfit',sans-serif;letter-spacing:.05em}
+.brand-right strong{color:var(--forest);font-weight:600}
+.screen{display:none;animation:fadeUp.55s cubic-bezier(.2,.7,.2,1) both}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.welcome-card{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:54px 48px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.welcome-card::before{content:"";position:absolute;top:-120px;right:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(217,177,75,.2),transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(27,42,90,.08);border:1px solid rgba(27,42,90,.18);color:var(--navy);padding:6px 14px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;margin-bottom:24px}
+.welcome-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(28px,4vw,42px);line-height:1.02;color:var(--navy);letter-spacing:-.02em;margin-bottom:18px}
+.welcome-title em{font-style:italic;color:var(--gold);font-weight:700}
+.welcome-sub{font-size:17px;color:var(--ink-soft);max-width:620px;margin-bottom:24px}
+.skills-box{background:rgba(27,42,90,.03);border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin-bottom:36px;max-width:620px}
+.skills-title{font-size:12px;font-weight:600;color:var(--navy);letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.skills-list{list-style:none;font-size:14px;color:var(--ink-soft)}
+.skills-list li{margin-bottom:6px;padding-left:18px;position:relative}
+.skills-list li::before{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;color:var(--gold-brand);font-size:10px;position:absolute;left:0;top:5px}
+.welcome-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px}
+.meta-item{background:rgba(255,255,255,.5);border:1px solid var(--border);border-radius:8px;padding:16px 18px}
+.meta-item.num{font-family:'Fraunces',serif;font-weight:700;font-size:28px;color:var(--navy);line-height:1}
+.meta-item.lb{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:4px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px;letter-spacing:.04em}
+.form-group select,.form-group input{width:100%;padding:14px 16px;border:1px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:15px;color:var(--ink);background:rgba(255,255,255,.6);transition:border .2s}
+.form-group select:focus,.form-group input:focus{outline:none;border-color:var(--gold-brand);box-shadow:0 0 0 3px rgba(217,177,75,.15)}
+.name-error{display:none;color:var(--red);font-size:13px;margin-top:6px;padding:8px 12px;background:var(--error-soft);border-radius:8px}
+.name-error.show{display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border:none;border-radius:8px;font-family:'Outfit',sans-serif;font-weight:600;font-size:15px;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--navy);color:#fff;box-shadow:0 4px 14px -4px rgba(27,42,90,.45)}
+.btn-primary:hover{background:#141f42;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--navy);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(27,42,90,.06)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.progress-wrap{flex:1;margin:0 20px}
+.progress-bar{height:6px;background:var(--bg-2);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-brand),var(--navy));border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.progress-text{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
+.timer-badge{display:flex;align-items:center;gap:6px;background:rgba(27,42,90,.08);border:1px solid rgba(27,42,90,.15);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--navy)}
+.timer-badge i{font-size:12px}
+.question-card{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:40px 36px;box-shadow:var(--shadow);margin-bottom:20px}
+.question-num{font-size:11px;font-weight:600;color:var(--gold-brand);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+.question-text{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--navy);line-height:1.35;margin-bottom:28px}
+.options{display:flex;flex-direction:column;gap:12px}
+.option{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.6)}
+.option:hover{border-color:var(--gold);background:var(--cream)}
+.option.selected{border-color:var(--navy);background:rgba(27,42,90,.05)}
+.option.correct{border-color:var(--ok);background:var(--ok-soft)}
+.option.wrong{border-color:var(--red);background:var(--error-soft)}
+.option-letter{width:32px;height:32px;border-radius:50%;background:var(--bg-2);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--ink-soft);flex-shrink:0}
+.option.selected .option-letter{background:var(--navy);color:#fff}
+.option.correct .option-letter{background:var(--ok);color:#fff}
+.option.wrong .option-letter{background:var(--red);color:#fff}
+.option-text{font-size:15px;line-height:1.45;padding-top:4px}
+.actions{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
+.results-card{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:48px 40px;box-shadow:var(--shadow);text-align:center}
+.score-circle{width:180px;height:180px;margin:0 auto 24px;position:relative}
+.score-circle svg{width:100%;height:100%}
+.score-circle .track{fill:none;stroke:var(--bg-2);stroke-width:12}
+.score-circle .fill{fill:none;stroke:var(--navy);stroke-width:12;stroke-linecap:round;stroke-dasharray:565.48;stroke-dashoffset:565.48;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
+.score-inner{position:absolute;inset:20px;border-radius:50%;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border)}
+.score-value{font-family:'Fraunces',serif;font-weight:900;font-size:42px;color:var(--navy);line-height:1}
+.score-value.slash{font-size:20px;color:var(--muted);font-weight:400}
+.score-value.max{font-size:18px;color:var(--muted);font-weight:400}
+.results-name{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.results-course{font-size:14px;color:var(--muted);margin-bottom:20px}
+.save-status{font-size:13px;color:var(--ok);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:6px}
+.penalty-note{font-size:13px;color:var(--red);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.results-actions{display:flex;justify-content:center;gap:12px;margin-top:24px;flex-wrap:wrap}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}
+.stat-item{background:rgba(255,255,255,.5);border:1px solid var(--border);border-radius:8px;padding:16px}
+.stat-num{font-family:'Fraunces',serif;font-weight:700;font-size:24px;color:var(--navy)}
+.stat-lb{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+.review-box{margin:16px 0 4px;text-align:left;border:1px solid var(--border);border-radius:8px;padding:16px;background:#fafafa}
+.review-head{font-family:"Lora",serif;color:var(--navy);font-size:1.05rem;margin-bottom:12px}
+.review-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.review-item:last-child{border-bottom:none}
+.review-q{font-weight:600;color:var(--ink);margin-bottom:8px}
+.review-row{font-size:.9rem;color:var(--ink-soft);margin:4px 0}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-right:6px}
+.tag.bad{background:#fbeaea;color:var(--red)}
+.tag.good{background:#eef6f1;color:var(--ok)}
+.review-empty{color:var(--ok);font-weight:600;text-align:center;padding:8px}
+.btn-ghost.full{width:100%;margin-top:14px}
+.btn-excel{color:var(--ok);border-color:#cfe6da}.btn-excel:hover{background:#eef6f1}
+/* Panel docente */
+.teacher-panel-opener{position:fixed;right:20px;bottom:20px;width:10px;height:10px;border-radius:50%;background:var(--border);cursor:pointer;opacity:.3;z-index:100}
+.teacher-panel-opener:hover{opacity:1;background:var(--gold)}
+.teacher-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center}
+.teacher-overlay.open{display:flex}
+.teacher-modal{background:var(--paper);border-radius:22px;padding:36px;max-width:900px;width:95%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px -20px rgba(0,0,0,.4)}
+.teacher-modal h2{font-family:'Fraunces',serif;color:var(--forest-deep);margin-bottom:16px}
+.teacher-key-input{display:flex;gap:10px;margin-bottom:20px}
+.teacher-key-input input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif}
+.teacher-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+#teacher-table-wrap{overflow-x:auto}
+#teacher-table-wrap table{width:100%;border-collapse:collapse;font-size:13px}
+#teacher-table-wrap th{text-align:left;padding:8px 10px;border-bottom:2px solid var(--border);color:var(--forest);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+#teacher-table-wrap td{padding:8px 10px;border-bottom:1px solid var(--border)}
+#teacher-table-wrap tr:hover td{background:rgba(31,74,61,.03)}
+.btn-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;padding:4px 8px;border-radius:6px}
+.btn-del:hover{background:var(--error-soft)}
+.btn-del-all{background:var(--red);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px}
+.btn-del-all:hover{opacity:.85}
+.filter-input{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;width:100%;margin-bottom:12px}
+
+/* ═══ RESULTS COMPONENT REDESIGN ═══ */
+:root{
+  --navy:#1B2A5B;--gold-brand:#B8891F;--burgundy:#8B1E3F;--cream:#FDF8E8;
+  --hairline:#E5E8EF;--label-gray:#5A6478;--green-brand:#1E7B4F;--icon-gray:#C4C9D4;
+}
+.results-card{background:var(--cream,#FDF8E8);border:1px solid var(--hairline);border-radius:22px;padding:48px 40px;box-shadow:var(--shadow);text-align:center}
+.score-value{font-family:'Fraunces',serif;font-weight:900;font-size:42px;color:var(--navy);line-height:1}
+.score-value.slash{font-size:20px;color:var(--muted);font-weight:400}
+.score-value.max{font-size:18px;color:var(--muted);font-weight:400}
+.score-circle .fill{stroke:var(--green-brand)}
+
+/* ── IB conversion ── */
+.ib-conversion{margin:6px 0 20px;display:inline-flex;align-items:center;gap:8px;background:rgba(27,42,91,.06);border:1px solid rgba(27,42,91,.15);border-radius:10px;padding:8px 16px}
+.ib-label{font-size:11px;font-weight:600;color:var(--label-gray);text-transform:uppercase;letter-spacing:.08em}
+.ib-band{font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:var(--navy)}
+.ib-desc{font-size:12px;color:var(--muted);margin-left:4px}
+
+/* ── Result progress bar (with 50%/70% marks) ── */
+.result-progress{margin:16px auto 24px;max-width:340px}
+.result-progress-label{font-size:11px;font-weight:600;color:var(--label-gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;text-align:left}
+.result-progress-track{position:relative;height:8px;background:var(--hairline);border-radius:99px;overflow:visible}
+.result-progress-fill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative;z-index:2}
+.result-progress-mark{position:absolute;top:-3px;width:1px;height:14px;background:rgba(27,42,91,.25);z-index:1}
+.result-progress-mark-label{position:absolute;top:-18px;font-size:9px;color:var(--label-gray);transform:translateX(-50%);font-weight:600}
+
+/* ── Meta grid (3 columns, no vertical borders) ── */
+.meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);border-radius:12px;overflow:hidden;margin:20px 0;text-align:left}
+.meta-cell{background:var(--cream,#FDF8E8);padding:14px 18px}
+.meta-label{font-size:11px;font-weight:600;color:var(--label-gray);text-transform:uppercase;letter-spacing:.08em}
+.meta-value{font-size:15px;color:var(--navy);font-weight:600;margin-top:4px}
+
+/* ── Distribution cells ── */
+.dist-section{margin:20px 0;text-align:left}
+.dist-title{font-size:11px;font-weight:600;color:var(--label-gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.dist-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dist-cell{background:rgba(255,255,255,.5);border:1px solid var(--hairline);border-radius:10px;padding:10px 8px;text-align:center}
+.dist-letter{font-family:'Fraunces',serif;font-weight:700;font-size:18px;color:var(--navy)}
+.dist-ratio{font-size:12px;color:var(--label-gray);margin-top:2px}
+
+/* ── Review section redesign ── */
+.review-box{margin:24px 0 4px;text-align:left;border:1px solid var(--hairline);border-radius:16px;padding:24px 28px;background:var(--cream,#FDF8E8)}
+.review-head{font-family:'Fraunces',serif;color:var(--navy);font-size:1.05rem;margin-bottom:16px;font-weight:700}
+.review-item{padding:24px 0;border-bottom:1px solid var(--hairline);break-inside:avoid;page-break-inside:avoid}
+.review-item:last-child{border-bottom:none}
+.review-q-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.review-q-num{font-size:18px;font-weight:700;color:var(--navy);line-height:1}
+.review-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 10px;border-radius:6px;letter-spacing:.04em}
+.review-badge.bad{background:rgba(139,30,63,.1);color:var(--burgundy)}
+.review-badge.good{background:rgba(30,123,79,.1);color:var(--green-brand)}
+.review-q-text{font-size:14px;color:var(--ink);line-height:1.5;margin-top:8px;margin-bottom:12px}
+.option-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0}
+.option-icon{flex-shrink:0;margin-top:1px}
+.option-content{flex:1;display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.option-letter-label{font-size:12px;font-weight:700;color:var(--ink-soft);min-width:18px}
+.option-text{font-size:13px;color:var(--ink-soft);line-height:1.45;flex:1}
+.option-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.option-tag.user{background:rgba(139,30,63,.1);color:var(--burgundy)}
+.option-tag.correct-tag{background:rgba(30,123,79,.1);color:var(--green-brand)}
+.option-tag.match{background:rgba(30,123,79,.15);color:var(--green-brand)}
+.explanation-block{margin-top:12px;padding:14px 18px;background:rgba(27,42,91,.04);border:1px solid var(--hairline);border-radius:10px}
+.explanation-label{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.explanation-text{font-size:13px;color:var(--ink-soft);line-height:1.5}
+
+/* ═══ DIAGRAMAS SVG ═══ */
+.diagram-box{margin:0 0 22px;padding:14px;background:#fdfcf9;border:1px solid var(--hairline);border-radius:12px;text-align:center}
+.diagram-box svg{max-width:100%;height:auto}
+.diagram-box img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--hairline);display:block;margin:0 auto}
+.diagram-caption{font-size:11px;color:var(--label-gray);margin-top:8px;line-height:1.5}
+
+/* ═══ MODAL PERSONALIZADO (sin alert ni confirm nativos) ═══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--paper);border-radius:16px;padding:28px 30px;max-width:460px;width:92%;box-shadow:0 24px 80px -20px rgba(0,0,0,.4)}
+.modal-title{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.modal-message{font-size:14px;color:var(--ink-soft);line-height:1.5;margin-bottom:22px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.modal-btn{padding:10px 20px;border-radius:8px;border:none;font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s}
+.modal-btn.primary{background:var(--navy);color:#fff}
+.modal-btn.primary:hover{background:#141f42}
+.modal-btn.ghost{background:transparent;color:var(--navy);border:1px solid var(--border)}
+.modal-btn.ghost:hover{background:rgba(27,42,90,.06)}
+.modal-btn.danger{background:var(--red);color:#fff}
+.modal-btn.danger:hover{opacity:.85}
+
+/* ═══ TOAST (penalización) ═══ */
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--red);color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 10px 30px -8px rgba(0,0,0,.35);z-index:400;transition:transform .35s cubic-bezier(.2,.7,.2,1);max-width:92%;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ═══ RANKING (panel docente) ═══ */
+.rank-pos{display:inline-flex;align-items:center;gap:6px;font-family:'Fraunces',serif;font-weight:700;font-size:16px;color:var(--navy)}
+.rank-name{font-size:13px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-grade{font-family:'Fraunces',serif;font-weight:700;font-size:15px;color:var(--navy);white-space:nowrap}
+.medal{font-size:16px}
+.medal.gold{color:var(--gold-brand)}
+.medal.silver{color:#9AA3B2}
+.medal.bronze{color:#A9713B}
+.rank-empty{font-size:13px;color:var(--muted);padding:12px 0}
+.teacher-rank-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.teacher-rank-head h3{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--navy)}
+.btn-back-table{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--navy);font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;cursor:pointer}
+.btn-back-table:hover{background:rgba(27,42,91,.06)}
+.teacher-rank-row{display:grid;grid-template-columns:46px 1fr auto 64px;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.teacher-rank-row:last-child{border-bottom:none}
+.teacher-rank-row:hover{background:rgba(31,74,61,.03)}
+.teacher-rank-date{font-size:12px;color:var(--muted);white-space:nowrap}
+
+@media(max-width:720px){.container{padding:20px 14px 60px}.welcome-card,.results-card{padding:32px 22px}.welcome-meta,.stats-grid{grid-template-columns:1fr;gap:8px}.question-card{padding:26px 22px}.question-text{font-size:19px}.quiz-header{flex-direction:column;align-items:flex-start}.brand-right{display:none}.actions{flex-direction:column-reverse;gap:10px}.actions .btn{width:100%}}
+@media print{body{background:#fff}body::before{display:none}.brand,.welcome-screen,.quiz-screen,.results-actions,.teacher-panel-opener{display:none !important}.results-card{box-shadow:none;border:none;padding:24px 20px}.container{max-width:100%;padding:0}.score-circle svg circle{fill:var(--green-brand) !important}.score-circle .track{fill:var(--cream) !important}.score-value{color:var(--navy) !important;font-weight:700 !important}.review-item{break-inside:avoid;page-break-inside:avoid}.review-box{border:none;padding:0}.meta-grid{border:1px solid var(--hairline)}.dist-cell{border:1px solid var(--hairline)}body{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}}
+</style>
+</head>
+<body>
+<div class="container">
+<!-- BRAND -->
+<div class="brand">
+  <div class="brand-left">
+    <div class="brand-mark">E</div>
+    <div class="brand-text">
+      <div class="brand-text t1">Economía — 2BGU</div>
+      <div class="brand-text t2">Refuerzo U3</div>
+    </div>
+  </div>
+  <div class="brand-right">Microeconomía · Unidad 3<br><strong>ADA de refuerzo</strong></div>
+</div>
+
+<!-- ═══════ SCREEN: INTRO ═══════ -->
+<section id="welcome-screen" class="screen active">
+<div class="welcome-card">
+  <div class="eyebrow"><i class="fa-solid fa-shield-halved"></i> Evaluación formativa</div>
+  <h1 class="welcome-title">Refuerzo de la Unidad 3</h1>
+  <p class="welcome-sub">Veinte preguntas de aplicación sobre la intervención del gobierno en los mercados: impuestos indirectos, subvenciones, provisión directa, reglamentación de mando y control, externalidades y bienes públicos. Incluye lectura de diagramas y preguntas sobre la lectura «Cuando el mercado no basta».</p>
+  <div class="skills-box">
+    <div class="skills-title"><i class="fa-solid fa-brain"></i> Competencias evaluadas</div>
+    <ul class="skills-list">
+            <li>Efectos de un impuesto indirecto sobre el precio, la cantidad y los grupos de interés</li>
+            <li>Efectos y costo de oportunidad de una subvención</li>
+            <li>Diferencias entre provisión directa y reglamentación de mando y control</li>
+            <li>Tipos de externalidades: costos y beneficios privados y sociales</li>
+            <li>Producción socialmente óptima, pérdida de bienestar y bienes deseables e indeseables</li>
+            <li>Características de los bienes públicos y problema del polizón</li>
+          </ul>
+  </div>
+  <div class="welcome-meta">
+    <div class="meta-item"><div class="meta-item num" id="totalQDisplay">20</div><div class="meta-item lb">Preguntas</div></div>
+    <div class="meta-item"><div class="meta-item num">/10</div><div class="meta-item lb">Puntaje</div></div>
+    <div class="meta-item"><div class="meta-item num" id="intentosDisplay">1 intento</div><div class="meta-item lb">Por estudiante</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--muted);margin:0 0 16px;text-align:center">Resuelve el quiz después de leer la lectura y de entregar tu mapa mental hecho a mano. Si cambias de ventana más de una vez, se restan 0,5 puntos por cada salida.</p>
+      <div class="form-group">
+    <label for="studentName"><i class="fa-solid fa-user"></i> Selecciona tu nombre</label>
+    <select id="studentName">
+      <option value="">— Selecciona —</option>
+    </select>
+    <div id="nameError" class="name-error"></div>
+  </div>
+  <button class="btn btn-primary" onclick="startQuiz()" style="width:100%"><i class="fa-solid fa-play"></i> Comenzar evaluación</button>
+</div>
+</section>
+
+<!-- ═══════ SCREEN: QUIZ ═══════ -->
+<section id="quiz-screen" class="screen">
+<div class="quiz-header">
+  <div class="brand-left" style="gap:10px">
+    <div class="brand-mark" style="width:36px;height:36px;font-size:15px">E</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-text" id="progressText">1 / 20</div>
+  </div>
+  <div class="timer-badge"><i class="fa-solid fa-clock"></i> <span id="timerDisplay">90s</span></div>
+</div>
+<div id="questionArea"></div>
+<div class="actions">
+  <button class="btn btn-ghost" id="prevBtn" onclick="prevQuestion()" disabled><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+  <button class="btn btn-primary" id="nextBtn">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+</section>
+
+<!-- ═══════ SCREEN: RESULTS ═══════ -->
+<section id="results-screen" class="screen">
+<div class="results-card">
+  <div class="score-circle">
+    <svg viewBox="0 0 220 220">
+      <circle class="track" cx="110" cy="110" r="90"/>
+      <circle class="fill" id="scoreRing" cx="110" cy="110" r="90"/>
+    </svg>
+    <div class="score-inner">
+      <div class="score-value" id="scoreValue">0</div>
+      <div class="score-value slash">/</div>
+      <div class="score-value max">10</div>
+    </div>
+  </div>
+  <div class="results-name" id="resultsName"></div>
+  <div class="results-course" id="resultsCourse"></div>
+  <div class="save-status" id="saveStatus"><i class="fa-solid fa-spinner fa-spin"></i> Guardando resultado...</div>
+  <div class="penalty-note" id="penaltyNote" style="display:none"></div>
+
+  <!-- IB Conversion -->
+  <div class="ib-conversion" id="ibConversion" style="display:none">
+    <span class="ib-label">Escala IB</span>
+    <span class="ib-band" id="ibBand"></span>
+    <span class="ib-desc" id="ibDesc"></span>
+  </div>
+
+  <!-- Result progress bar -->
+  <div class="result-progress">
+    <div class="result-progress-track">
+      <div class="result-progress-fill" id="resultProgressFill" style="width:0%"></div>
+      <div class="result-progress-mark" style="left:50%"><span class="result-progress-mark-label">50%</span></div>
+      <div class="result-progress-mark" style="left:70%"><span class="result-progress-mark-label">70%</span></div>
+    </div>
+  </div>
+
+  <!-- Stats grid -->
+  <div class="stats-grid">
+    <div class="stat-item"><div class="stat-num" id="statCorrect">0</div><div class="stat-lb">Correctas</div></div>
+    <div class="stat-item"><div class="stat-num" id="statTotal">0</div><div class="stat-lb">Total</div></div>
+    <div class="stat-item"><div class="stat-num" id="statTime">0:00</div><div class="stat-lb">Duración</div></div>
+  </div>
+
+  <!-- Metadata grid -->
+  <div class="meta-grid">
+    <div class="meta-cell"><div class="meta-label">Estudiante</div><div class="meta-value" id="metaStudent"></div></div>
+    <div class="meta-cell"><div class="meta-label">Curso</div><div class="meta-value" id="metaCourse"></div></div>
+    <div class="meta-cell"><div class="meta-label">Fecha</div><div class="meta-value" id="metaDate"></div></div>
+  </div>
+
+  <!-- Distribution -->
+  <div class="dist-section">
+    <div class="dist-title">Aciertos por clave de respuesta</div>
+    <div class="dist-grid">
+      <div class="dist-cell"><div class="dist-letter">A</div><div class="dist-ratio" id="distA">0 / 0</div></div>
+      <div class="dist-cell"><div class="dist-letter">B</div><div class="dist-ratio" id="distB">0 / 0</div></div>
+      <div class="dist-cell"><div class="dist-letter">C</div><div class="dist-ratio" id="distC">0 / 0</div></div>
+      <div class="dist-cell"><div class="dist-letter">D</div><div class="dist-ratio" id="distD">0 / 0</div></div>
+    </div>
+  </div>
+
+  <div class="results-actions">
+    <button class="btn btn-ghost" onclick="printPDF()"><i class="fa-solid fa-print"></i> Imprimir / PDF</button>
+    <button class="btn btn-ghost" id="btn-review" onclick="toggleReview()"><i class="fa-solid fa-magnifying-glass"></i> Ver retroalimentación</button>
+  </div>
+  <div id="review-box" class="review-box" style="display:none"></div>
+</div>
+</section>
+
+<!-- PANEL DOCENTE (invisible) -->
+<div class="teacher-panel-opener" id="teacherOpener" onclick="openTeacherPanel()"></div>
+</div>
+
+<!-- OVERLAY DOCENTE -->
+<div class="teacher-overlay" id="teacherOverlay">
+<div class="teacher-modal">
+  <h2><i class="fa-solid fa-chalkboard-user"></i> Panel Docente</h2>
+  <div class="teacher-key-input">
+    <input type="password" id="teacherKeyInput" placeholder="Clave docente...">
+    <button class="btn btn-primary" onclick="authenticateTeacher()" style="padding:10px 20px"><i class="fa-solid fa-right-to-bracket"></i></button>
+  </div>
+  <div id="teacherContent" style="display:none">
+    <div class="teacher-controls">
+      <button class="btn btn-ghost" onclick="loadTeacher()"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+      <button class="btn btn-ghost btn-excel" onclick="exportExcel()"><i class="fa-solid fa-file-excel"></i> Excel</button>
+      <button class="btn btn-ghost" onclick="loadTeacherRanking()"><i class="fa-solid fa-ranking-star"></i> Ranking</button>
+      <button class="btn-del-all" onclick="clearAllGrades()"><i class="fa-solid fa-trash"></i> Borrar todo</button>
+      <button class="btn btn-ghost" onclick="toggleQuizStatus()"><i class="fa-solid fa-lock-open" id="statusIcon"></i> <span id="statusText">Abrir quiz</span></button>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px"><label for="maxAttemptsSel">Intentos por estudiante</label><select id="maxAttemptsSel" style="padding:6px 8px;border-radius:8px;border:1px solid var(--border)"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select><button class="btn btn-ghost" onclick="saveMaxAttempts()"><i class="fa-solid fa-floppy-disk"></i> Guardar</button></span>
+    </div>
+    <input type="text" class="filter-input" id="teacherFilter" placeholder="Filtrar por nombre..." oninput="filterTeacher()">
+    <div id="teacher-table-wrap"></div>
+  </div>
+  <div style="text-align:right;margin-top:16px">
+    <button class="btn btn-ghost" onclick="closeTeacherPanel()"><i class="fa-solid fa-xmark"></i> Cerrar</button>
+  </div>
+</div>
+</div>
+
+<!-- MODAL PERSONALIZADO -->
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal-box">
+  <div class="modal-title" id="modalTitle">Aviso</div>
+  <div class="modal-message" id="modalMessage"></div>
+  <div class="modal-actions" id="modalActions"></div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+ BANCO DE PREGUNTAS — REFUERZO DE LA UNIDAD 3 (2BGU)
+   30 preguntas por tema; cada intento recibe 20 según CUOTA_TEMAS
+ ============================================================ */
+const QUESTION_BANK = [
+ {
+  "topic": "Impuestos indirectos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Impuestos indirectos",
+  "scenario": "",
+  "question": "El gobierno aplica un impuesto indirecto por cada botella de bebida azucarada. ¿Qué muestra el diagrama de ese mercado?",
+  "options": [
+   "La oferta se desplaza a la izquierda y el precio sube",
+   "La demanda se desplaza a la izquierda y el precio baja",
+   "La oferta se desplaza a la derecha y el precio baja",
+   "La demanda se desplaza a la derecha y el precio sube"
+  ],
+  "answer": 0,
+  "explanation": "Un impuesto indirecto eleva los costos de producción: la curva de oferta se desplaza hacia arriba (a la izquierda), el precio que paga el consumidor sube y la cantidad baja.",
+  "type": "imp"
+ },
+ {
+  "topic": "Impuestos indirectos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Impuestos indirectos",
+  "scenario": "",
+  "question": "Tras un impuesto indirecto sobre los cigarrillos, ¿qué ocurre con lo que reciben los productores por cada unidad vendida?",
+  "options": [
+   "Reciben menos, porque entregan el impuesto al Estado",
+   "Reciben más, porque el precio de mercado ya ha subido",
+   "Reciben igual, porque el impuesto lo paga el cliente",
+   "Reciben menos, porque la demanda se ha desplazado"
+  ],
+  "answer": 0,
+  "explanation": "El consumidor paga un precio más alto, pero el productor se queda con ese precio menos el impuesto, que es inferior al precio inicial.",
+  "type": "imp"
+ },
+ {
+  "topic": "Subvenciones",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Subvenciones",
+  "scenario": "",
+  "question": "El gobierno concede una subvención por cada quintal de arroz producido. ¿Qué efecto tiene en ese mercado?",
+  "options": [
+   "La oferta aumenta: el precio baja y la cantidad sube",
+   "La oferta disminuye: el precio sube y la cantidad baja",
+   "La demanda aumenta: el precio sube y la cantidad sube",
+   "La demanda disminuye: el precio baja y la cantidad baja"
+  ],
+  "answer": 0,
+  "explanation": "La subvención reduce los costos de producción: la oferta se desplaza hacia abajo (a la derecha), el precio baja y la cantidad aumenta.",
+  "type": "sub"
+ },
+ {
+  "topic": "Subvenciones",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Subvenciones",
+  "scenario": "",
+  "question": "Un gobierno mantiene una subvención al gas de uso doméstico. Al evaluar la medida, ¿qué limitación conviene señalar?",
+  "options": [
+   "Tiene costo de oportunidad: menos fondos para salud",
+   "Eleva el precio que pagan los hogares de menor ingreso",
+   "Reduce la cantidad de gas que se consume en el mercado",
+   "Desplaza la demanda de gas y crea un exceso de oferta"
+  ],
+  "answer": 0,
+  "explanation": "El dinero de la subvención no puede usarse en otros fines, como salud o educación: ese es su costo de oportunidad.",
+  "type": "sub"
+ },
+ {
+  "topic": "Provisión directa y mando y control",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Provisión directa y mando y control",
+  "scenario": "",
+  "question": "Un municipio prohíbe por ordenanza las fundas plásticas de un solo uso. ¿Qué forma de intervención aplica?",
+  "options": [
+   "Mando y control, porque fija una norma de carácter legal",
+   "Impuesto indirecto, porque encarece el uso de cada funda",
+   "Provisión directa, porque el municipio entrega otras fundas",
+   "Subvención, porque abarata el costo de las fundas de tela"
+  ],
+  "answer": 0,
+  "explanation": "La reglamentación de mando y control consiste en leyes y normas que obligan o prohíben, con vigilancia y sanciones.",
+  "type": "dir"
+ },
+ {
+  "topic": "Provisión directa y mando y control",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Provisión directa y mando y control",
+  "scenario": "",
+  "question": "El Ministerio de Salud aplica vacunas sin costo en sus propios centros. ¿Qué forma de intervención es y por qué?",
+  "options": [
+   "Provisión directa: el Estado produce y entrega el servicio",
+   "Subvención: el Estado paga a empresas para bajar el precio",
+   "Mando y control: el Estado obliga por ley a recibir la dosis",
+   "Impuesto indirecto: el Estado cobra a quien rechaza la dosis"
+  ],
+  "answer": 0,
+  "explanation": "En la provisión directa el propio gobierno ofrece el bien o servicio, financiado con ingresos públicos.",
+  "type": "dir"
+ },
+ {
+  "topic": "Provisión directa y mando y control",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Provisión directa y mando y control",
+  "scenario": "",
+  "question": "La ley prohíbe fumar en espacios públicos cerrados. ¿Qué limitación tiene esta forma de intervención?",
+  "options": [
+   "Exige vigilar y sancionar, lo que resulta costoso",
+   "Genera ingresos al Estado, lo que resulta regresivo",
+   "Reduce el precio del bien, lo que eleva su consumo",
+   "Desplaza la oferta a la derecha y crea un exceso"
+  ],
+  "answer": 0,
+  "explanation": "Las normas solo funcionan si se vigila su cumplimiento y se sanciona a quien las incumple, y eso tiene un costo.",
+  "type": "dir"
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "Una fábrica hipotética vende a sus clientes, paga a sus obreros y deja ganancias a sus dueños, pero vierte residuos en un estero donde los pescadores pierden capturas. ¿Quién es el tercero afectado y por qué?",
+  "options": [
+   "Los pescadores: asumen un costo sin ser parte del mercado",
+   "Los clientes: asumen un costo al comprar a un precio mayor",
+   "Los dueños: asumen un costo al pagar por la materia prima",
+   "Los obreros: asumen un costo al trabajar durante más horas"
+  ],
+  "answer": 0,
+  "explanation": "Una externalidad afecta a terceros: personas que no producen ni consumen el bien, pero reciben un costo o un beneficio.",
+  "type": "ext"
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "La fábrica que contamina el estero genera una externalidad. ¿De qué tipo es y cómo se reconoce?",
+  "options": [
+   "Negativa de la producción: el costo social supera al privado",
+   "Negativa del consumo: el beneficio social es menor al privado",
+   "Positiva de la producción: el costo social es menor al privado",
+   "Positiva del consumo: el beneficio social supera al privado"
+  ],
+  "answer": 0,
+  "explanation": "El daño surge al producir. El costo marginal social (privado más el daño a terceros) es mayor que el costo marginal privado.",
+  "type": "ext"
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "Sin intervención, ¿qué cantidad produce un mercado con una externalidad negativa de la producción?",
+  "options": [
+   "Más que la óptima, con pérdida de bienestar",
+   "Menos que la óptima, con pérdida de bienestar",
+   "Menos que la óptima, sin pérdida de bienestar",
+   "Más que la óptima, sin pérdida de bienestar"
+  ],
+  "answer": 0,
+  "explanation": "El productor no paga el daño a terceros, por eso produce más de lo socialmente óptimo y se genera una pérdida de bienestar.",
+  "type": "ext"
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "Cuando una persona se vacuna, también reduce el contagio de quienes la rodean. ¿Qué tipo de externalidad es?",
+  "options": [
+   "Positiva del consumo: el beneficio social supera al privado",
+   "Positiva de la producción: el costo social es menor al privado",
+   "Negativa del consumo: el beneficio social es menor al privado",
+   "Positiva del consumo: el beneficio privado supera al social"
+  ],
+  "answer": 0,
+  "explanation": "El beneficio para terceros surge al consumir la vacuna: el beneficio marginal social es mayor que el beneficio marginal privado.",
+  "type": "ext"
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "Si las vacunas se vendieran en un mercado libre, sin intervención, ¿qué resultado cabe esperar?",
+  "options": [
+   "Se consume menos de lo óptimo y se pierde bienestar",
+   "Se consume más de lo óptimo y se pierde bienestar",
+   "Se consume menos de lo óptimo, sin perder bienestar",
+   "Se consume más de lo óptimo, sin perder el bienestar"
+  ],
+  "answer": 0,
+  "explanation": "Cada persona solo considera su beneficio privado; por eso se consume menos de lo socialmente óptimo y hay pérdida de bienestar.",
+  "type": "ext"
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "El humo del cigarrillo en un lugar cerrado afecta a quienes no fuman. ¿Cómo se clasifica esta externalidad?",
+  "options": [
+   "Negativa del consumo: daña a terceros cuando se consume",
+   "Negativa de la producción: daña a terceros al fabricarse",
+   "Positiva del consumo: favorece a terceros cuando se consume",
+   "Positiva de la producción: favorece a terceros al fabricarse"
+  ],
+  "answer": 0,
+  "explanation": "El daño a terceros aparece en el momento del consumo: el beneficio marginal social es menor que el beneficio marginal privado.",
+  "type": "ext"
+ },
+ {
+  "topic": "Óptimo social y bienes deseables",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Óptimo social y bienes deseables",
+  "scenario": "",
+  "question": "¿En qué punto se alcanza la producción socialmente óptima de un bien?",
+  "options": [
+   "Donde el beneficio marginal social iguala al costo marginal social",
+   "Donde el beneficio marginal privado iguala al costo marginal privado",
+   "Donde el beneficio marginal social supera al costo marginal social",
+   "Donde el costo marginal privado iguala al costo marginal de terceros"
+  ],
+  "answer": 0,
+  "explanation": "La eficiencia asignativa se logra cuando el beneficio marginal social es igual al costo marginal social.",
+  "type": "opt"
+ },
+ {
+  "topic": "Impuestos indirectos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Impuestos indirectos",
+  "scenario": "",
+  "question": "Para corregir la externalidad negativa del consumo de cigarrillos, el gobierno aplica un impuesto indirecto. ¿Qué efecto busca?",
+  "options": [
+   "Subir el precio y acercar el consumo al nivel óptimo",
+   "Bajar el precio y acercar así el consumo al nivel óptimo",
+   "Subir el precio y alejar el consumo del nivel óptimo",
+   "Subir el precio sin modificar la cantidad consumida"
+  ],
+  "answer": 0,
+  "explanation": "El impuesto encarece el bien y reduce la cantidad consumida, que se acerca a la cantidad socialmente óptima.",
+  "type": "imp"
+ },
+ {
+  "topic": "Subvenciones",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Subvenciones",
+  "scenario": "",
+  "question": "Un gobierno quiere que más personas consuman un bien que genera beneficios para terceros. ¿Qué medida es coherente con ese objetivo?",
+  "options": [
+   "Una subvención, porque abarata el bien y eleva su consumo",
+   "Un impuesto indirecto, porque encarece el bien y lo limita",
+   "Una prohibición legal, porque restringe el uso de ese bien",
+   "Un impuesto indirecto, porque recauda y eleva el consumo"
+  ],
+  "answer": 0,
+  "explanation": "Ante una externalidad positiva hay subconsumo; una subvención baja el precio y aumenta la cantidad hacia el óptimo social.",
+  "type": "sub"
+ },
+ {
+  "topic": "Bienes públicos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Bienes públicos",
+  "scenario": "",
+  "question": "El alumbrado de una calle beneficia a todos los que pasan por ella. ¿Qué características lo convierten en un bien público?",
+  "options": [
+   "No rival ni excluyente: nadie queda fuera de su uso",
+   "Rival y excluyente: quien no paga queda fuera del uso",
+   "Rival y no excluyente: el uso de uno agota el de otros",
+   "No rival y excluyente: se puede cobrar a cada usuario"
+  ],
+  "answer": 0,
+  "explanation": "Un bien público es no rival (el uso de una persona no reduce el de otra) y no excluyente (no se puede impedir que alguien lo use).",
+  "type": "pub"
+ },
+ {
+  "topic": "Bienes públicos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Bienes públicos",
+  "scenario": "",
+  "question": "¿Por qué las empresas privadas no suelen ofrecer bienes públicos como el alumbrado de las calles?",
+  "options": [
+   "Porque no pueden cobrar a quien lo usa sin pagar",
+   "Porque su costo marginal social supera al privado",
+   "Porque el Estado prohíbe por ley su venta privada",
+   "Porque su consumo perjudica a terceros que no pagan"
+  ],
+  "answer": 0,
+  "explanation": "Como no se puede excluir a nadie, muchas personas lo usan sin pagar (problema del polizón) y el mercado no lo provee.",
+  "type": "pub"
+ },
+ {
+  "topic": "Óptimo social y bienes deseables",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Óptimo social y bienes deseables",
+  "scenario": "",
+  "question": "¿Cuál de estos casos describe un bien deseable desde el punto de vista social?",
+  "options": [
+   "La educación, que se consume menos de lo socialmente óptimo",
+   "El cigarrillo, que se consume menos de lo socialmente óptimo",
+   "El cigarrillo, que se consume justo lo socialmente óptimo",
+   "La vacuna, que se consume más de lo socialmente óptimo"
+  ],
+  "answer": 0,
+  "explanation": "Los bienes deseables desde el punto de vista social generan beneficios para terceros y el mercado los ofrece en menor cantidad de la óptima.",
+  "type": "opt"
+ },
+ {
+  "topic": "Óptimo social y bienes deseables",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Óptimo social y bienes deseables",
+  "scenario": "",
+  "question": "Un estudiante afirma: «Si el mercado del cemento está en equilibrio, produce la cantidad que la sociedad necesita». ¿Cómo evaluarías la afirmación?",
+  "options": [
+   "Incorrecta: el equilibrio ignora los costos sobre terceros",
+   "Correcta: en el equilibrio no existe ningún exceso de oferta",
+   "Incorrecta: el equilibrio produce menos de lo que es óptimo",
+   "Correcta: en el equilibrio el costo social ya ha sido pagado"
+  ],
+  "answer": 0,
+  "explanation": "El equilibrio de mercado iguala beneficios y costos privados. Si hay externalidades, la cantidad de equilibrio no coincide con la socialmente óptima.",
+  "type": "opt"
+ },
+ {
+  "topic": "Impuestos indirectos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Impuestos indirectos",
+  "scenario": "",
+  "question": "El diagrama muestra un mercado antes y después de una intervención del gobierno. ¿Qué medida representa?",
+  "options": [
+   "Un impuesto indirecto: la oferta se desplaza arriba",
+   "Una subvención estatal: la oferta se desplaza arriba",
+   "Un impuesto indirecto: la oferta se desplaza abajo",
+   "Una subvención estatal: la oferta se desplaza abajo"
+  ],
+  "answer": 0,
+  "explanation": "La curva de oferta pasa de O1 a O2, hacia arriba: los costos de producción aumentaron, como ocurre con un impuesto indirecto.",
+  "type": "imp",
+  "diagram": "imp",
+  "diagramCaption": "Mercado antes y después de una intervención del gobierno."
+ },
+ {
+  "topic": "Impuestos indirectos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Impuestos indirectos",
+  "scenario": "",
+  "question": "En el diagrama, después del impuesto indirecto, ¿qué precio recibe el productor por cada unidad?",
+  "options": [
+   "P3, es decir, P2 menos el impuesto por unidad",
+   "P2, el nuevo precio que se paga en el mercado",
+   "P1, el precio de equilibrio previo a la medida",
+   "P3, es decir, P1 menos el impuesto por unidad"
+  ],
+  "answer": 0,
+  "explanation": "El consumidor paga P2. El productor entrega el impuesto al Estado y se queda con P3, que es P2 menos el impuesto.",
+  "type": "imp",
+  "diagram": "imp",
+  "diagramCaption": "Mercado antes y después de una intervención del gobierno."
+ },
+ {
+  "topic": "Subvenciones",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Subvenciones",
+  "scenario": "",
+  "question": "El diagrama muestra un mercado antes y después de una intervención del gobierno. ¿Qué describe correctamente el cambio?",
+  "options": [
+   "Subvención: el precio baja a P2 y la cantidad sube a Q2",
+   "Impuesto: el precio baja a P2 y la cantidad sube a Q2",
+   "Impuesto: el precio baja a P1 y la cantidad sube a Q1",
+   "Más demanda: el precio baja a P2 y la cantidad sube a Q2"
+  ],
+  "answer": 0,
+  "explanation": "La oferta pasa de O1 a O2, hacia abajo: los costos se redujeron por la subvención. El precio baja de P1 a P2 y la cantidad sube de Q1 a Q2.",
+  "type": "sub",
+  "diagram": "sub",
+  "diagramCaption": "Mercado antes y después de una intervención del gobierno."
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "El diagrama muestra un mercado con una externalidad. ¿De qué tipo es y qué cantidad produce el mercado sin intervención?",
+  "options": [
+   "Negativa de la producción: produce Q1, más que Q*",
+   "Positiva de la producción: produce Q1, más que Q*",
+   "Negativa del consumo: produce Q1, menos que Q*",
+   "Negativa de la producción: produce Q*, menos que Q1"
+  ],
+  "answer": 0,
+  "explanation": "El costo marginal social está por encima del costo marginal privado: es una externalidad negativa de la producción. El mercado produce Q1, mayor que la cantidad socialmente óptima Q*.",
+  "type": "ext",
+  "diagram": "ext",
+  "diagramCaption": "Mercado con una externalidad."
+ },
+ {
+  "topic": "Subvenciones",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Subvenciones",
+  "scenario": "",
+  "question": "Según la lectura, el gas de uso doméstico se vende en Ecuador a un precio subvencionado. ¿Qué razón de intervención se ajusta mejor a esa medida?",
+  "options": [
+   "Apoyar a los hogares de menores ingresos",
+   "Obtener ingresos para el presupuesto público",
+   "Corregir una externalidad negativa del consumo",
+   "Reducir el consumo de un bien indeseable"
+  ],
+  "answer": 0,
+  "explanation": "Una subvención a un bien de consumo básico abarata su precio; entre las razones de intervención de la lectura, corresponde a apoyar a los hogares de menores ingresos.",
+  "type": "sub"
+ },
+ {
+  "topic": "Impuestos indirectos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Impuestos indirectos",
+  "scenario": "",
+  "question": "La lectura propone evaluar una intervención preguntando quién gana y quién pierde. Con un impuesto indirecto a las bebidas azucaradas, ¿quién pierde de forma más directa?",
+  "options": [
+   "Los consumidores y los productores de esas bebidas",
+   "El gobierno, que dejará de recaudar por esas bebidas",
+   "Los terceros, que dejan de recibir un beneficio",
+   "Los productores de bienes sin relación con ellas"
+  ],
+  "answer": 0,
+  "explanation": "El consumidor paga un precio más alto y el productor recibe menos por unidad y vende menos. El gobierno, en cambio, recauda.",
+  "type": "imp"
+ },
+ {
+  "topic": "Externalidades",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Externalidades",
+  "scenario": "",
+  "question": "Una empresa capacita a sus técnicos y varios pasan después a otras empresas, que aprovechan esa formación sin pagarla. ¿Qué tipo de externalidad es?",
+  "options": [
+   "Positiva de la producción: el costo social es menor al privado",
+   "Positiva del consumo: el beneficio social supera al privado",
+   "Negativa de la producción: el costo social es mayor que el privado",
+   "Negativa del consumo: el beneficio social es menor al privado"
+  ],
+  "answer": 0,
+  "explanation": "El beneficio para terceros surge de la actividad productiva de la empresa: el costo marginal social es menor que el costo marginal privado.",
+  "type": "ext"
+ },
+ {
+  "topic": "Bienes públicos",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Bienes públicos",
+  "scenario": "",
+  "question": "¿Cuál de estos servicios que ofrece el Estado no cumple las características de un bien público?",
+  "options": [
+   "La vacuna gratuita: cada dosis la usa una persona",
+   "El alumbrado de la calle: ilumina a quien pasa por allí",
+   "La defensa nacional: protege a cada habitante",
+   "El faro de la costa: guía a los barcos cercanos"
+  ],
+  "answer": 0,
+  "explanation": "La dosis que recibe una persona no puede usarla otra: es un bien rival. Que el Estado lo provea gratis no lo convierte en bien público.",
+  "type": "pub"
+ },
+ {
+  "topic": "Provisión directa y mando y control",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Provisión directa y mando y control",
+  "scenario": "",
+  "question": "Para reducir el humo de las fábricas, un gobierno duda entre fijar un límite legal de emisiones o cobrar un impuesto por unidad producida. ¿Qué diferencia entre ambas medidas es correcta?",
+  "options": [
+   "El límite obliga por ley; el impuesto eleva los costos",
+   "El límite recauda ingresos; el impuesto no recauda",
+   "El límite reduce los costos; el impuesto fija una norma",
+   "El límite no exige control; el impuesto sí lo exige"
+  ],
+  "answer": 0,
+  "explanation": "El límite legal es reglamentación de mando y control: obliga y requiere vigilancia. El impuesto actúa sobre los costos de producción y genera recaudación.",
+  "type": "dir"
+ },
+ {
+  "topic": "Subvenciones",
+  "unit": "ADA de refuerzo · U3",
+  "syllabus": "Subvenciones",
+  "scenario": "",
+  "question": "El gobierno concede una subvención a los productores de arroz. ¿Qué grupo asume el costo de la medida?",
+  "options": [
+   "Los contribuyentes, mediante el dinero público",
+   "Los consumidores, mediante un precio más elevado",
+   "Los productores, mediante un menor ingreso total",
+   "Los trabajadores, mediante un salario más reducido"
+  ],
+  "answer": 0,
+  "explanation": "La subvención se paga con dinero público, que proviene de los contribuyentes y tiene un costo de oportunidad.",
+  "type": "sub"
+ }
+];
+const CUOTA_TEMAS = {"imp": 3, "sub": 3, "dir": 3, "ext": 7, "opt": 2, "pub": 2};
+
+/* ═══════ DIAGRAMAS SVG (inline, modelos económicos) ═══════ */
+const SVG_DIAGRAMS = {
+  imp: function(){ return `<svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de oferta y demanda con dos curvas de oferta, O1 y O2, y los precios P1, P2 y P3"><rect x="0" y="0" width="460" height="320" fill="#fdfcf9"/><line x1="70" y1="280" x2="440" y2="280" stroke="#1b2a5a" stroke-width="1.5"/><line x1="70" y1="280" x2="70" y2="24" stroke="#1b2a5a" stroke-width="1.5"/><text x="440" y="312" font-size="12" fill="#1b2a5a" text-anchor="end" font-weight="600">Cantidad</text><text x="20" y="30" font-size="12" fill="#1b2a5a" font-weight="600">Precio</text><line x1="90" y1="74.3" x2="365" y2="247.4" stroke="#1b2a5a" stroke-width="2.2"/><line x1="90" y1="254.3" x2="365" y2="112.9" stroke="#1b2a5a" stroke-width="2.2"/><line x1="90" y1="202.9" x2="365" y2="61.5" stroke="#8e1b3a" stroke-width="2.2"/><text x="371" y="251.4" font-size="12" fill="#1b2a5a" font-weight="700">D</text><text x="371" y="116.9" font-size="12" fill="#1b2a5a" font-weight="700">O1</text><text x="371" y="65.5" font-size="12" fill="#1b2a5a" font-weight="700">O2</text><line x1="70" y1="173.3" x2="247.5" y2="173.3" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><line x1="247.5" y1="173.3" x2="247.5" y2="280" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><text x="46" y="177.3" font-size="12" fill="#1b2a5a">P1</text><text x="239.5" y="296" font-size="12" fill="#1b2a5a">Q1</text><line x1="70" y1="145.0" x2="202.5" y2="145.0" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><line x1="202.5" y1="145.0" x2="202.5" y2="280" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><text x="46" y="149.0" font-size="12" fill="#1b2a5a">P2</text><text x="194.5" y="296" font-size="12" fill="#1b2a5a">Q2</text><line x1="70" y1="196.4" x2="202.5" y2="196.4" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><text x="46" y="200.4" font-size="12" fill="#1b2a5a">P3</text></svg>`; },
+  sub: function(){ return `<svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de oferta y demanda con dos curvas de oferta, O1 y O2, y los precios P1 y P2"><rect x="0" y="0" width="460" height="320" fill="#fdfcf9"/><line x1="70" y1="280" x2="440" y2="280" stroke="#1b2a5a" stroke-width="1.5"/><line x1="70" y1="280" x2="70" y2="24" stroke="#1b2a5a" stroke-width="1.5"/><text x="440" y="312" font-size="12" fill="#1b2a5a" text-anchor="end" font-weight="600">Cantidad</text><text x="20" y="30" font-size="12" fill="#1b2a5a" font-weight="600">Precio</text><line x1="90" y1="74.3" x2="365" y2="247.4" stroke="#1b2a5a" stroke-width="2.2"/><line x1="90" y1="254.3" x2="365" y2="112.9" stroke="#1b2a5a" stroke-width="2.2"/><line x1="140" y1="280.0" x2="365" y2="164.3" stroke="#8e1b3a" stroke-width="2.2"/><text x="371" y="251.4" font-size="12" fill="#1b2a5a" font-weight="700">D</text><text x="371" y="116.9" font-size="12" fill="#1b2a5a" font-weight="700">O1</text><text x="371" y="168.3" font-size="12" fill="#1b2a5a" font-weight="700">O2</text><line x1="70" y1="173.3" x2="247.5" y2="173.3" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><line x1="247.5" y1="173.3" x2="247.5" y2="280" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><text x="46" y="177.3" font-size="12" fill="#1b2a5a">P1</text><text x="239.5" y="296" font-size="12" fill="#1b2a5a">Q1</text><line x1="70" y1="201.6" x2="292.5" y2="201.6" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><line x1="292.5" y1="201.6" x2="292.5" y2="280" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><text x="46" y="205.6" font-size="12" fill="#1b2a5a">P2</text><text x="284.5" y="296" font-size="12" fill="#1b2a5a">Q2</text></svg>`; },
+  ext: function(){ return `<svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama con la demanda y las curvas de costo marginal privado y costo marginal social, con las cantidades Q1 y Q asterisco"><rect x="0" y="0" width="460" height="320" fill="#fdfcf9"/><line x1="70" y1="280" x2="440" y2="280" stroke="#1b2a5a" stroke-width="1.5"/><line x1="70" y1="280" x2="70" y2="24" stroke="#1b2a5a" stroke-width="1.5"/><text x="440" y="312" font-size="12" fill="#1b2a5a" text-anchor="end" font-weight="600">Cantidad</text><text x="20" y="30" font-size="12" fill="#1b2a5a" font-weight="600">Precio</text><line x1="90" y1="74.3" x2="365" y2="247.4" stroke="#1b2a5a" stroke-width="2.2"/><line x1="90" y1="254.3" x2="365" y2="112.9" stroke="#1b2a5a" stroke-width="2.2"/><line x1="90" y1="202.9" x2="365" y2="61.5" stroke="#8e1b3a" stroke-width="2.2"/><text x="371" y="251.4" font-size="10.5" fill="#1b2a5a" font-weight="700">D = BMP = BMS</text><text x="371" y="116.9" font-size="12" fill="#1b2a5a" font-weight="700">CMP</text><text x="371" y="65.5" font-size="12" fill="#1b2a5a" font-weight="700">CMS</text><line x1="70" y1="173.3" x2="247.5" y2="173.3" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><line x1="247.5" y1="173.3" x2="247.5" y2="280" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><text x="239.5" y="296" font-size="12" fill="#1b2a5a">Q1</text><line x1="70" y1="145.0" x2="202.5" y2="145.0" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><line x1="202.5" y1="145.0" x2="202.5" y2="280" stroke="#7a7f8c" stroke-width="1" stroke-dasharray="4 4"/><text x="194.5" y="296" font-size="12" fill="#1b2a5a">Q*</text></svg>`; },
+
+  tariff: function(){
+    return `<svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de arancel a las importaciones">
+  <rect x="0" y="0" width="460" height="320" fill="#fdfcf9"/>
+  <line x1="70" y1="280" x2="440" y2="280" stroke="#1b2a5a" stroke-width="1.5"/>
+  <line x1="70" y1="280" x2="70" y2="40" stroke="#1b2a5a" stroke-width="1.5"/>
+  <text x="430" y="298" font-size="12" fill="#1b2a5a" text-anchor="end" font-weight="600">Cantidad</text>
+  <text x="60" y="48" font-size="12" fill="#1b2a5a" text-anchor="start" font-weight="600">Precio</text>
+  <polygon points="150,220 230,220 230,170" fill="rgba(181,69,58,.18)"/>
+  <polygon points="350,220 280,220 280,170" fill="rgba(181,69,58,.18)"/>
+  <text x="205" y="205" font-size="11" fill="#8e1b3a" font-weight="700">b</text>
+  <text x="315" y="205" font-size="11" fill="#8e1b3a" font-weight="700">d</text>
+  <rect x="230" y="170" width="50" height="50" fill="rgba(217,177,75,.30)"/>
+  <text x="255" y="198" font-size="9.5" fill="#6b4a16" text-anchor="middle" font-weight="600">Ingreso</text>
+  <text x="255" y="210" font-size="9.5" fill="#6b4a16" text-anchor="middle" font-weight="600">gobierno</text>
+  <line x1="90" y1="258" x2="400" y2="64" stroke="#b45309" stroke-width="2.5"/>
+  <line x1="90" y1="34" x2="420" y2="270" stroke="#1e40af" stroke-width="2.5"/>
+  <text x="395" y="60" font-size="13" fill="#b45309" font-weight="700">S</text>
+  <text x="415" y="262" font-size="13" fill="#1e40af" font-weight="700">D</text>
+  <line x1="70" y1="220" x2="420" y2="220" stroke="#2e7d32" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="212" font-size="11" fill="#2e7d32" font-weight="600">Pw</text>
+  <line x1="70" y1="170" x2="420" y2="170" stroke="#b5453a" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="162" font-size="11" fill="#b5453a" font-weight="600">Pw + t</text>
+  <line x1="150" y1="220" x2="150" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="230" y1="170" x2="230" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="280" y1="170" x2="280" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="350" y1="220" x2="350" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="150" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q1</text>
+  <text x="230" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q2</text>
+  <text x="280" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q3</text>
+  <text x="350" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q4</text>
+  <text x="70" y="312" font-size="10" fill="#5a6478">Áreas b y d: pérdida irrecuperable de eficiencia</text>
+</svg>`;
+  },
+  quota: function(){
+    return `<svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de cupo de importación">
+  <rect x="0" y="0" width="460" height="320" fill="#fdfcf9"/>
+  <line x1="70" y1="280" x2="440" y2="280" stroke="#1b2a5a" stroke-width="1.5"/>
+  <line x1="70" y1="280" x2="70" y2="40" stroke="#1b2a5a" stroke-width="1.5"/>
+  <text x="430" y="298" font-size="12" fill="#1b2a5a" text-anchor="end" font-weight="600">Cantidad</text>
+  <text x="60" y="48" font-size="12" fill="#1b2a5a" text-anchor="start" font-weight="600">Precio</text>
+  <polygon points="150,220 230,220 230,170" fill="rgba(181,69,58,.18)"/>
+  <polygon points="350,220 280,220 280,170" fill="rgba(181,69,58,.18)"/>
+  <text x="205" y="205" font-size="11" fill="#8e1b3a" font-weight="700">b</text>
+  <text x="315" y="205" font-size="11" fill="#8e1b3a" font-weight="700">d</text>
+  <rect x="230" y="170" width="50" height="50" fill="rgba(123,44,191,.22)"/>
+  <text x="255" y="198" font-size="9.5" fill="#5b1893" text-anchor="middle" font-weight="600">Renta</text>
+  <text x="255" y="210" font-size="9.5" fill="#5b1893" text-anchor="middle" font-weight="600">cupo</text>
+  <line x1="90" y1="258" x2="400" y2="64" stroke="#b45309" stroke-width="2.5"/>
+  <line x1="90" y1="34" x2="420" y2="270" stroke="#1e40af" stroke-width="2.5"/>
+  <text x="395" y="60" font-size="13" fill="#b45309" font-weight="700">S</text>
+  <text x="415" y="262" font-size="13" fill="#1e40af" font-weight="700">D</text>
+  <line x1="70" y1="220" x2="420" y2="220" stroke="#2e7d32" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="212" font-size="11" fill="#2e7d32" font-weight="600">Pw</text>
+  <line x1="70" y1="170" x2="420" y2="170" stroke="#b5453a" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="162" font-size="11" fill="#b5453a" font-weight="600">Pq</text>
+  <line x1="150" y1="220" x2="150" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="230" y1="170" x2="230" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="280" y1="170" x2="280" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="350" y1="220" x2="350" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="150" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q1</text>
+  <text x="230" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q2</text>
+  <text x="280" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q3</text>
+  <text x="350" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q4</text>
+  <text x="70" y="312" font-size="10" fill="#5a6478">Áreas b y d: pérdida irrecuperable · Renta del cupo: capturada por importadores</text>
+</svg>`;
+  },
+  subsidy: function(){
+    return `<svg viewBox="0 0 460 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de subvención a la exportación">
+  <rect x="0" y="0" width="460" height="330" fill="#fdfcf9"/>
+  <line x1="70" y1="280" x2="440" y2="280" stroke="#1b2a5a" stroke-width="1.5"/>
+  <line x1="70" y1="280" x2="70" y2="40" stroke="#1b2a5a" stroke-width="1.5"/>
+  <text x="430" y="298" font-size="12" fill="#1b2a5a" text-anchor="end" font-weight="600">Cantidad</text>
+  <text x="60" y="48" font-size="12" fill="#1b2a5a" text-anchor="start" font-weight="600">Precio</text>
+  <polygon points="250,150 320,150 320,100" fill="rgba(181,69,58,.18)"/>
+  <polygon points="150,100 200,100 200,150" fill="rgba(181,69,58,.18)"/>
+  <text x="285" y="135" font-size="11" fill="#8e1b3a" font-weight="700">b</text>
+  <text x="175" y="135" font-size="11" fill="#8e1b3a" font-weight="700">d</text>
+  <rect x="150" y="100" width="170" height="50" fill="rgba(217,177,75,.30)"/>
+  <text x="235" y="128" font-size="10.5" fill="#6b4a16" text-anchor="middle" font-weight="600">Costo fiscal</text>
+  <line x1="150" y1="221" x2="400" y2="43" stroke="#b45309" stroke-width="2.5"/>
+  <line x1="90" y1="63" x2="380" y2="244" stroke="#1e40af" stroke-width="2.5"/>
+  <text x="395" y="40" font-size="13" fill="#b45309" font-weight="700">S</text>
+  <text x="375" y="238" font-size="13" fill="#1e40af" font-weight="700">D</text>
+  <line x1="70" y1="150" x2="420" y2="150" stroke="#2e7d32" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="142" font-size="11" fill="#2e7d32" font-weight="600">Pw</text>
+  <line x1="70" y1="100" x2="420" y2="100" stroke="#b5453a" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="92" font-size="11" fill="#b5453a" font-weight="600">Pw + s</text>
+  <line x1="150" y1="100" x2="150" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="320" y1="100" x2="320" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="150" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Qd</text>
+  <text x="320" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Qs</text>
+  <line x1="150" y1="305" x2="320" y2="305" stroke="#1b2a5a" stroke-width="1.5"/>
+  <polygon points="150,305 160,301 160,309" fill="#1b2a5a"/>
+  <polygon points="320,305 310,301 310,309" fill="#1b2a5a"/>
+  <text x="235" y="299" font-size="11" fill="#1b2a5a" text-anchor="middle" font-weight="600">Exportaciones</text>
+  <text x="70" y="322" font-size="10" fill="#5a6478">Áreas b y d: pérdida irrecuperable · Costo fiscal: subvención por unidad por exportaciones</text>
+</svg>`;
+  },
+  subsidyDomestic: function(){
+    return `<svg viewBox="0 0 460 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de subsidio doméstico">
+  <rect x="0" y="0" width="460" height="330" fill="#fdfcf9"/>
+  <line x1="70" y1="280" x2="440" y2="280" stroke="#1b2a5a" stroke-width="1.5"/>
+  <line x1="70" y1="280" x2="70" y2="40" stroke="#1b2a5a" stroke-width="1.5"/>
+  <text x="430" y="298" font-size="12" fill="#1b2a5a" text-anchor="end" font-weight="600">Cantidad</text>
+  <text x="60" y="48" font-size="12" fill="#1b2a5a" text-anchor="start" font-weight="600">Precio</text>
+  <rect x="70" y="128" width="223" height="60" fill="rgba(217,177,75,.30)"/>
+  <text x="181" y="152" font-size="10.5" fill="#6b4a16" text-anchor="middle" font-weight="600">Gasto fiscal</text>
+  <text x="181" y="166" font-size="10.5" fill="#6b4a16" text-anchor="middle" font-weight="600">= s × Q1</text>
+  <line x1="100" y1="240" x2="410" y2="60" stroke="#b45309" stroke-width="2.5"/>
+  <text x="404" y="56" font-size="13" fill="#b45309" font-weight="700">S</text>
+  <line x1="134" y1="280" x2="410" y2="120" stroke="#b45309" stroke-width="2.5" stroke-dasharray="7 5" opacity="0.9"/>
+  <text x="455" y="112" font-size="13" fill="#b45309" font-weight="700" text-anchor="end">S₁ = S − s</text>
+  <line x1="90" y1="70" x2="400" y2="250" stroke="#1e40af" stroke-width="2.5"/>
+  <text x="405" y="258" font-size="13" fill="#1e40af" font-weight="700">D</text>
+  <line x1="70" y1="158" x2="241" y2="158" stroke="#2e7d32" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="151" font-size="11" fill="#2e7d32" font-weight="600">P*</text>
+  <line x1="70" y1="188" x2="293" y2="188" stroke="#b5453a" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="202" font-size="11" fill="#b5453a" font-weight="600">Pc</text>
+  <line x1="70" y1="128" x2="293" y2="128" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="72" y="122" font-size="11" fill="#7b1fa2" font-weight="600">Pp</text>
+  <line x1="241" y1="158" x2="241" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="293" y1="128" x2="293" y2="280" stroke="#9aa3b2" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="241" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q*</text>
+  <text x="293" y="294" font-size="11" fill="#3a4a44" text-anchor="middle">Q1</text>
+  <line x1="305" y1="128" x2="305" y2="188" stroke="#1b2a5a" stroke-width="1.5"/>
+  <polygon points="305,128 301,138 309,138" fill="#1b2a5a"/>
+  <polygon points="305,188 301,178 309,178" fill="#1b2a5a"/>
+  <text x="313" y="162" font-size="11" fill="#1b2a5a" font-weight="700">s</text>
+  <text x="70" y="322" font-size="10" fill="#5a6478">El subsidio desplaza la oferta hacia abajo: Pc baja, Pp sube y Q1 supera a Q*</text>
+</svg>`;
+  },
+  /* DIAGRAMA MUDO (imagen) — impuesto ad valorem 10% a televisores de 50" (El Universo, 22-nov-2024)
+     Esquema oferta-demanda del impuesto sobre los vendedores; el estudiante ubica las áreas del modelo. */
+  diagramaMudo: function(){
+    return `<img class="diagram-img" src="img/diagrama-mudo-impuesto-tv.png" alt="Diagrama mudo de oferta y demanda con impuesto ad valorem del 10% a los televisores de 50 pulgadas: precio del consumidor, precio del productor, cuña fiscal, ingreso fiscal y pérdida irrecuperable de eficiencia">`;
+  },
+};
+
+/* ═══════ STATE & CONFIG ═══════ */
+const STATE = {studentName:"", studentLastname:"", selectedQuestions:[], currentIndex:0, userAnswers:[], answered:false, shuffledAnswers:[], shuffledOptions:[], timePerQuestion:90, timer:null, timerSeconds:0, perQuestionTimer:null, perQuestionTimeLeft:90, startTime:null};
+const TOTAL_QUESTIONS = 20;
+const EXAM_ID = 'refuerzo-u3-2bgu';
+/* ═══ SUPABASE (guardado de notas) ═══
+   Proyecto Supabase compartido con quiz-comercio-internacional.
+   Las notas se guardan en la tabla quiz_results con exam_id propio. */
+const SUPABASE_URL = 'https://iitjrrnndfxqjzkggtog.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_90BfL8Ncg9WyceCdTE5Wzg_9kj14ubv';
+const SUPABASE_CONFIGURED = SUPABASE_URL.indexOf('tu-proyecto') === -1 && SUPABASE_ANON_KEY.indexOf('tu-anon-key') === -1 && SUPABASE_URL.indexOf('PEGAR') === -1 && SUPABASE_ANON_KEY.indexOf('PEGAR') === -1;
+function supabaseHeaders(){ return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer '+SUPABASE_ANON_KEY, 'Content-Type': 'application/json' }; }
+function supabaseGet(path){ return fetch(SUPABASE_URL+'/rest/v1/'+path, { headers: supabaseHeaders(), cache: 'no-store' }); }
+function supabaseSend(path, method, body, prefer){
+  const h = supabaseHeaders();
+  if(prefer) h['Prefer'] = prefer;
+  return fetch(SUPABASE_URL+'/rest/v1/'+path, { method: method, headers: h, body: body ? JSON.stringify(body) : undefined });
+}
+/* ═══ INTENTOS PERMITIDOS (parametrizable desde el Panel Docente) ═══
+   Se guarda en quiz_config, sin cambiar el esquema: una fila por valor, con
+   exam_id = EXAM_ID + '::intentos=N' y open = true en el valor vigente. */
+let MAX_ATTEMPTS = 1;
+function pintarIntentos(){
+  const d = document.getElementById('intentosDisplay'); if(d) d.textContent = MAX_ATTEMPTS === 1 ? '1 intento' : MAX_ATTEMPTS + ' intentos';
+  const sel = document.getElementById('maxAttemptsSel'); if(sel) sel.value = String(MAX_ATTEMPTS);
+}
+function loadMaxAttempts(){
+  if(!SUPABASE_CONFIGURED) return Promise.resolve(MAX_ATTEMPTS);
+  return supabaseGet('quiz_config?exam_id=like.'+encodeURIComponent(EXAM_ID+'::intentos=*')+'&select=exam_id,open')
+    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(rows=>{
+      const on = (rows||[]).filter(r=>r.open===true).map(r=>parseInt(String(r.exam_id).split('=').pop(),10)).filter(n=>n>=1 && n<=5);
+      MAX_ATTEMPTS = on.length ? Math.max.apply(null,on) : 1; pintarIntentos(); return MAX_ATTEMPTS;
+    }).catch(()=>MAX_ATTEMPTS);
+}
+async function saveMaxAttempts(){
+  try {
+    if(!SUPABASE_CONFIGURED) throw new Error('Supabase no esta configurado');
+    const n = parseInt(document.getElementById('maxAttemptsSel').value,10) || 1;
+    const filas = [1,2,3,4,5].map(i=>({ exam_id: EXAM_ID+'::intentos='+i, open: i===n }));
+    const res = await supabaseSend('quiz_config?on_conflict=exam_id', 'POST', filas, 'resolution=merge-duplicates');
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    MAX_ATTEMPTS = n; pintarIntentos(); showToast('Intentos permitidos por estudiante: '+n);
+  } catch(e){ alertModal('No se pudo guardar el número de intentos: '+e.message); }
+}
+function intentosLocales(fullName){
+  const k = 'quiz_'+EXAM_ID+'_'+fullName;
+  return parseInt(localStorage.getItem(k+'_n')||'0',10) || (localStorage.getItem(k) ? 1 : 0);
+}
+const TEACHER_KEY = 'DOCENTE2026';
+const LETTERS = ['A','B','C','D'];
+
+/* ═══ SVG ICONS (inline, no emoji, no font-icon) ═══ */
+const SVG_ICONS = {
+  correct: '<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="9" fill="#1E7B4F"/><path d="M5.5 9.5l2.5 2.5 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  wrong: '<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="9" fill="#8B1E3F"/><path d="M6 6l6 6M12 6l-6 6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+  neutral: '<svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="9" r="8" fill="none" stroke="#C4C9D4" stroke-width="1.5"/></svg>'
+};
+
+/* ═══ IB GRADE CONVERSION (configurable) ═══ */
+const IB_BANDS = [
+  {min:0.80, grade:7, desc:'Logro excepcional'},
+  {min:0.70, grade:6, desc:'Logro importante'},
+  {min:0.55, grade:5, desc:'Logro medio'},
+  {min:0.40, grade:4, desc:'Satisfactorio'},
+  {min:0.25, grade:3, desc:'Medianamente satisfactorio'},
+  {min:0.10, grade:2, desc:'Limitado'},
+  {min:0,    grade:1, desc:'Muy limitado'}
+];
+function getIBGrade(pct){
+  for(var i=0;i<IB_BANDS.length;i++){
+    if(pct>=IB_BANDS[i].min) return IB_BANDS[i];
+  }
+  return IB_BANDS[IB_BANDS.length-1];
+}
+
+/* ═══════ ROSTER ═══════ */
+const ROSTER = [
+  "ALBAN ALTAMIRANO, GIANELLA","ASPIAZU SOTOMAYOR, CAMILA","BARON MEJIA, JULIAN",
+  "CAMPUZANO SALAZAR, JUANJOSE","CHALEN HERRERA, VICENTE","DE LA CRUZ NARANJO, MATEO",
+  "FLOR LEON, JACINTO","GRANDA CONSTANTINE, XAVIER","GUERRERO HERDOIZA, IVANNA",
+  "MARTINEZ LUNA, MATIAS","MENDIBURO CEDEÑO, ADRIAN","MOLANO CASTRO, EMMANUEL",
+  "MURILLO CHÁVEZ, SERGIO","ORTIZ EGAS, SEBASTIAN","ORTIZ MONTENEGRO, CARLOS",
+  "PABON RENGIFO, VALESKA","ROMERO MONCADA, JUAN MARTIN","SIERRA TOALA, ERNESTO",
+  "STARK ROMAN, ALEJANDRA","TAMAYO BONILLA, DOMENICA","VIZCAINO BONILLA, JULIO",
+  "VIZHÑAY VELEZ, VALERIA"
+];
+
+/* ═══════ MODAL PERSONALIZADO (sin alert ni confirm nativos) ═══════ */
+function showModal(title, message, buttons){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalMessage').innerHTML = message;
+  const actions = document.getElementById('modalActions');
+  actions.innerHTML = '';
+  (buttons||[{label:'Aceptar', style:'primary'}]).forEach(function(b){
+    const btn = document.createElement('button');
+    btn.className = 'modal-btn ' + (b.style||'primary');
+    btn.innerHTML = b.label;
+    btn.onclick = function(){ closeModal(); if(b.onClick) b.onClick(); };
+    actions.appendChild(btn);
+  });
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+function alertModal(message, title){ showModal(title||'Aviso', message, [{label:'Aceptar', style:'primary'}]); }
+function confirmModal(message, onConfirm, title){
+  showModal(title||'Confirmar', message, [
+    {label:'Cancelar', style:'ghost'},
+    {label:'Confirmar', style:'danger', onClick: onConfirm}
+  ]);
+}
+
+/* ═══════ TOAST ═══════ */
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 4000);
+}
+
+/* ═══════ PENALIZACIÓN POR CAMBIO DE VENTANA ═══════ */
+let penaltyCount = 0;
+let windowLeaveCount = 0;
+document.addEventListener('visibilitychange', function(){
+  const quizActive = document.getElementById('quiz-screen').classList.contains('active');
+  if(document.hidden && quizActive){
+    windowLeaveCount++;
+    if(windowLeaveCount === 1){
+      showToast('Recordatorio: has cambiado de ventana. Si vuelves a salir, se restarán 0.5 puntos de tu nota.');
+    } else {
+      penaltyCount++;
+      showToast('Cambio de ventana detectado. Se restan 0.5 puntos de tu nota final.');
+    }
+  }
+});
+
+/* ═══════ INIT ═══════ */
+(function init(){
+  const sel = document.getElementById('studentName');
+  const sorted = [...new Set(ROSTER)].sort((a,b)=>a.localeCompare(b,'es'));
+  sorted.forEach(n=>{ const o=document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o); });
+  document.getElementById('totalQDisplay').textContent = TOTAL_QUESTIONS;
+  loadMaxAttempts();
+  document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+  document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+  checkQuizStatus();
+})();
+
+/* ═══════ HELPERS ═══════ */
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function shuffleWithOptions(opts, correctIdx){
+  const indexed = opts.map((text,i)=>({text, originalIdx:i}));
+  const shuffled = shuffle([...indexed]);
+  const newCorrectIdx = shuffled.findIndex(item=>item.originalIdx===correctIdx);
+  return { options:shuffled.map(item=>item.text), answerIdx:newCorrectIdx };
+}
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatTime(secs){ const m=Math.floor(secs/60); const s=secs%60; return m+':'+String(s).padStart(2,'0'); }
+
+/* ═══════ QUIZ STATUS ═══════ */
+function checkQuizStatus(){
+  if(!SUPABASE_CONFIGURED) return;
+  supabaseGet('quiz_config?exam_id=eq.'+EXAM_ID+'&select=open')
+    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(rows=>{
+      if(rows.length && rows[0].open === false){
+        document.querySelector('.welcome-card').innerHTML='<div style="text-align:center;padding:40px"><i class="fa-solid fa-lock" style="font-size:48px;color:var(--gold);margin-bottom:16px;display:block"></i><h2 style="font-family:Fraunces,serif;color:var(--forest-deep)">Evaluación cerrada</h2><p style="color:var(--muted);margin-top:8px">El docente abrirá la evaluación cuando esté listo. Espera instrucciones.</p></div>';
+      }
+    }).catch(()=>{ /* backend no disponible: no bloquear el quiz */ });
+}
+
+/* ═══════ START ═══════ */
+function startQuiz(){
+  const sel = document.getElementById('studentName');
+  const errorEl = document.getElementById('nameError');
+  const fullName = sel.value.trim();
+  if(!fullName){ errorEl.innerHTML='<i class="fa-solid fa-circle-exclamation"></i> Selecciona tu nombre para comenzar.'; errorEl.classList.add('show'); sel.focus(); return; }
+  errorEl.classList.remove('show');
+
+  const normalizedName = fullName.toUpperCase().trim();
+  loadMaxAttempts().then(function(){
+  // Gate local (localStorage): intentos usados en este dispositivo
+  if(intentosLocales(fullName) >= MAX_ATTEMPTS){
+    errorEl.innerHTML='<i class="fa-solid fa-circle-exclamation"></i> Ya usaste ' + (MAX_ATTEMPTS===1 ? 'tu intento' : 'tus '+MAX_ATTEMPTS+' intentos') + ' en este dispositivo.';
+    errorEl.classList.add('show');
+    return;
+  }
+  STATE.attemptNo = intentosLocales(fullName) + 1;
+
+  // Gate remoto (Supabase) — un reintento y luego falla cerrada: sin verificar no hay intento.
+  if(!SUPABASE_CONFIGURED){ launchQuiz(fullName); return; }
+  const checkRemote = () => supabaseGet('quiz_results?exam_id=eq.'+EXAM_ID+'&select=student_name,student_lastname')
+    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(rows=>{
+      const usados = rows.filter(r=>{
+        const rn = ((r.student_lastname||r.studentLastname||r.lastname||'')+', '+(r.student_name||r.studentName||r.name||'')).toUpperCase().trim();
+        const rnAlt = ((r.student_name||r.studentName||r.name||'')+' '+(r.student_lastname||r.studentLastname||r.lastname||'')).toUpperCase().trim();
+        return rn === normalizedName || rnAlt === normalizedName;
+      }).length;
+      const existing = usados >= MAX_ATTEMPTS;
+      STATE.attemptNo = usados + 1;
+      if(existing){
+        errorEl.innerHTML='<i class="fa-solid fa-circle-exclamation"></i> Ya usaste ' + (MAX_ATTEMPTS===1 ? 'tu intento' : 'tus '+MAX_ATTEMPTS+' intentos') + '.';
+        errorEl.classList.add('show');
+        return false;
+      }
+      launchQuiz(fullName);
+      return true;
+    });
+  checkRemote()
+    .catch(()=> new Promise(res=>setTimeout(res,1500)).then(checkRemote)) // reintento único
+    .catch(()=>{
+      errorEl.innerHTML='<i class="fa-solid fa-circle-exclamation"></i> No se pudo verificar si ya rendiste tu intento. Revisa tu conexión e inténtalo de nuevo.';
+      errorEl.classList.add('show');
+    });
+  });
+}
+
+function launchQuiz(fullName){
+  // Format: "APELLIDO1 APELLIDO2, NOMBRE"
+  const parts = fullName.split(', ');
+  if(parts.length > 1){
+    STATE.studentLastname = parts[0].trim();
+    STATE.studentName = parts[1].trim();
+  } else {
+    const nameParts = fullName.split(' ');
+    STATE.studentLastname = nameParts.length > 1 ? nameParts.pop() : '';
+    STATE.studentName = nameParts.join(' ');
+  }
+  STATE.studentFullName = fullName;
+  let _sel = [];
+  Object.keys(CUOTA_TEMAS).forEach(t => { _sel = _sel.concat(shuffle(QUESTION_BANK.filter(q => q.type === t)).slice(0, CUOTA_TEMAS[t])); });
+  STATE.selectedQuestions = shuffle(_sel);
+  STATE.currentIndex = 0;
+  STATE.userAnswers = new Array(STATE.selectedQuestions.length).fill(null);
+  STATE.shuffledAnswers = new Array(STATE.selectedQuestions.length).fill(null);
+  STATE.shuffledOptions = new Array(STATE.selectedQuestions.length).fill(null);
+  STATE.answered = false;
+  STATE.startTime = Date.now();
+  STATE.timerSeconds = 0;
+  penaltyCount = 0;
+  windowLeaveCount = 0;
+  startGlobalTimer();
+  renderQuestion();
+  showScreen('quiz-screen');
+}
+
+/* ═══════ TIMER (por pregunta + global) ═══════ */
+function startPerQuestionTimer(){
+  clearInterval(STATE.perQuestionTimer);
+  STATE.perQuestionTimeLeft = STATE.timePerQuestion;
+  updatePerQuestionDisplay();
+  STATE.perQuestionTimer = setInterval(()=>{
+    STATE.perQuestionTimeLeft--;
+    updatePerQuestionDisplay();
+    if(STATE.perQuestionTimeLeft <= 0){
+      clearInterval(STATE.perQuestionTimer);
+      handleTimeout();
+    }
+  },1000);
+}
+function updatePerQuestionDisplay(){
+  const el = document.getElementById('timerDisplay');
+  el.textContent = STATE.perQuestionTimeLeft + 's';
+  const badge = document.querySelector('.timer-badge');
+  if(STATE.perQuestionTimeLeft <= 10){
+    badge.style.color = 'var(--red)';
+    badge.style.background = 'rgba(181,69,58,.10)';
+    badge.style.borderColor = 'rgba(181,69,58,.25)';
+  } else {
+    badge.style.color = 'var(--forest)';
+    badge.style.background = 'rgba(31,74,61,.08)';
+    badge.style.borderColor = 'rgba(31,74,61,.15)';
+  }
+}
+function clearPerQuestionTimer(){
+  clearInterval(STATE.perQuestionTimer);
+}
+function handleTimeout(){
+  const idx = STATE.currentIndex;
+  if(STATE.userAnswers[idx] !== null) return;
+  STATE.userAnswers[idx] = -1;
+  renderQuestion();
+  setTimeout(()=>{ nextQuestion(); }, 2500);
+}
+function startGlobalTimer(){
+  clearInterval(STATE.timer);
+  STATE.timer = setInterval(()=>{
+    STATE.timerSeconds++;
+  },1000);
+}
+
+/* ═══════ RENDER ═══════ */
+function renderQuestion(){
+  const q = STATE.selectedQuestions[STATE.currentIndex];
+  const shuffled = shuffleWithOptions(q.options, q.answer);
+  // Store the correct answer index and shuffled options (only if not already stored)
+  if(STATE.shuffledAnswers[STATE.currentIndex] === null || STATE.shuffledAnswers[STATE.currentIndex] === undefined){
+    STATE.shuffledAnswers[STATE.currentIndex] = shuffled.answerIdx;
+    STATE.shuffledOptions[STATE.currentIndex] = shuffled.options;
+  }
+  const currentCorrect = STATE.shuffledAnswers[STATE.currentIndex];
+  const currentOptions = STATE.shuffledOptions[STATE.currentIndex];
+  const total = STATE.selectedQuestions.length;
+  const idx = STATE.currentIndex;
+
+  document.getElementById('progressFill').style.width = ((idx+1)/total*100)+'%';
+  document.getElementById('progressText').textContent = (idx+1)+' / '+total;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').textContent = idx === total-1 ? 'Finalizar' : 'Siguiente';
+  document.getElementById('nextBtn').innerHTML = idx === total-1 ? 'Finalizar <i class="fa-solid fa-flag-checkered"></i>' : 'Siguiente <i class="fa-solid fa-arrow-right"></i>';
+
+  const selected = STATE.userAnswers[idx];
+  let optionsHtml = currentOptions.map((opt,i)=>{
+    let cls = 'option';
+    if(selected !== null){
+      if(i === currentCorrect) cls += ' correct';
+      else if(i === selected) cls += ' wrong';
+    } else if(i === selected) cls += ' selected';
+    return `<div class="${cls}" data-idx="${i}" onclick="selectOption(${i})">
+      <div class="option-letter">${LETTERS[i]}</div>
+      <div class="option-text">${escapeHtml(opt)}</div>
+    </div>`;
+  }).join('');
+
+  const diagramHtml = (q.diagram && SVG_DIAGRAMS[q.diagram]) ? `<div class="diagram-box">${SVG_DIAGRAMS[q.diagram]()}<div class="diagram-caption">${escapeHtml(q.diagramCaption||'')}</div></div>` : '';
+
+  document.getElementById('questionArea').innerHTML = `
+    <div class="question-card">
+      <div class="question-num">Pregunta ${idx+1} de ${total} — ${escapeHtml(q.topic)}</div>
+      ${diagramHtml}
+      <div class="question-text">${escapeHtml(q.question)}</div>
+      <div class="options">${optionsHtml}</div>
+      ${selected !== null ? `<div style="margin-top:16px;padding:12px 16px;background:rgba(31,74,61,.05);border:1px solid var(--border);border-radius:10px;font-size:13px;color:var(--ink-soft)"><strong style="color:var(--forest)">Explicación:</strong> ${escapeHtml(q.explanation)}</div>` : ''}
+    </div>`;
+  if(selected === null){ startPerQuestionTimer(); } else { clearPerQuestionTimer(); }
+}
+
+function selectOption(idx){
+  if(STATE.userAnswers[STATE.currentIndex] !== null) return;
+  clearPerQuestionTimer();
+  STATE.userAnswers[STATE.currentIndex] = idx;
+  renderQuestion();
+}
+
+/* ═══════ NAVIGATION ═══════ */
+function nextQuestion(){
+  clearPerQuestionTimer();
+  if(STATE.currentIndex < STATE.selectedQuestions.length - 1){
+    STATE.currentIndex++;
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else {
+    finishQuiz();
+  }
+}
+function prevQuestion(){
+  clearPerQuestionTimer();
+  if(STATE.currentIndex > 0){
+    STATE.currentIndex--;
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+/* ═══════ FINISH ═══════ */
+function finishQuiz(){
+  clearPerQuestionTimer();
+  clearInterval(STATE.timer);
+  let correct = 0;
+  STATE.selectedQuestions.forEach((q,i)=>{
+    const correctIdx = STATE.shuffledAnswers[i];
+    if(STATE.userAnswers[i] === correctIdx) correct++;
+  });
+  const total = STATE.selectedQuestions.length;
+  const penaltyTotal = penaltyCount * 0.5;
+  const rawScore10 = correct / total * 10;
+  const score10 = Math.max(0, rawScore10 - penaltyTotal).toFixed(1);
+  const pctAdjusted = Math.max(0, correct / total - penaltyTotal / 10);
+  const duration = STATE.timerSeconds;
+
+  // Update UI
+  document.getElementById('resultsName').textContent = STATE.studentFullName;
+  document.getElementById('resultsCourse').textContent = '2BGU — Economía';
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statTime').textContent = formatTime(duration);
+
+  // Metadata
+  document.getElementById('metaStudent').textContent = STATE.studentFullName;
+  document.getElementById('metaCourse').textContent = '2BGU — Economía';
+  document.getElementById('metaDate').textContent = new Date().toLocaleDateString('es-EC',{day:'2-digit',month:'long',year:'numeric'});
+
+  // Penalización
+  const penaltyNote = document.getElementById('penaltyNote');
+  if(penaltyCount > 0){
+    penaltyNote.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Penalización por cambio de ventana: ' + penaltyCount + ' × 0.5 = ' + penaltyTotal.toFixed(1) + ' puntos restados de tu nota.';
+    penaltyNote.style.display = 'flex';
+  } else {
+    penaltyNote.style.display = 'none';
+  }
+
+  // IB conversion (sobre la nota ajustada)
+  var ibGrade = getIBGrade(pctAdjusted);
+  document.getElementById('ibConversion').style.display = 'inline-flex';
+  document.getElementById('ibBand').textContent = ibGrade.grade + ' / 7';
+  document.getElementById('ibDesc').textContent = '— ' + ibGrade.desc;
+
+  // Progress bar (conditional color)
+  var progFill = document.getElementById('resultProgressFill');
+  var progColor = pctAdjusted >= 0.7 ? '#1E7B4F' : pctAdjusted >= 0.5 ? '#B8891F' : '#8B1E3F';
+  setTimeout(function(){
+    progFill.style.width = (pctAdjusted * 100) + '%';
+    progFill.style.background = progColor;
+  },100);
+
+  // Distribution: "Aciertos por clave de respuesta" as A: X/Y
+  var counts = {0:0,1:0,2:0,3:0};
+  var hits = {0:0,1:0,2:0,3:0};
+  STATE.selectedQuestions.forEach(function(q,i){
+    var ci = STATE.shuffledAnswers[i];
+    counts[ci] = (counts[ci]||0) + 1;
+    if(STATE.userAnswers[i] === ci) hits[ci] = (hits[ci]||0) + 1;
+  });
+  ['A','B','C','D'].forEach(function(letter,idx){
+    var el = document.getElementById('dist'+letter);
+    if(el) el.textContent = hits[idx] + ' / ' + counts[idx];
+  });
+
+  // Score ring animation
+  const ring = document.getElementById('scoreRing');
+  const circumference = 2 * Math.PI * 90;
+  const offset = circumference - pctAdjusted * circumference;
+  setTimeout(function(){
+    ring.style.strokeDashoffset = offset;
+    document.getElementById('scoreValue').textContent = score10;
+  },100);
+
+  showScreen('results-screen');
+
+  // Save to Supabase (con fallback a localStorage)
+  const payload = {
+    studentName: STATE.studentName,
+    studentLastname: STATE.studentLastname,
+    course: '2BGU',
+    subject: 'Economía IB NM',
+    examId: EXAM_ID,
+    correct: correct,
+    total: STATE.selectedQuestions.length,
+    score_10: parseFloat(score10),
+    penalties: penaltyCount,
+    penaltyTotal: penaltyTotal,
+    answers: STATE.selectedQuestions.map((q,i)=>({
+      question: q.question,
+      selected: STATE.userAnswers[i],
+      correct: STATE.shuffledAnswers[i],
+      options: STATE.shuffledOptions[i],
+      topic: q.topic,
+      ok: STATE.userAnswers[i] === STATE.shuffledAnswers[i]
+    })),
+    timestamp: new Date().toISOString(),
+    startTimestamp: new Date(STATE.startTime).toISOString(),
+    endTimestamp: new Date().toISOString(),
+    totalDurationSeconds: duration
+  };
+
+  const sbRow = {
+    student_name: STATE.studentName,
+    student_lastname: STATE.studentLastname,
+    course: '2BGU',
+    exam_id: EXAM_ID,
+    score: correct,
+    total: STATE.selectedQuestions.length,
+    grade: parseFloat(score10),
+    timestamp: new Date().toISOString(),
+    attempt: STATE.attemptNo || 1,
+    answers: payload.answers
+  };
+  const saveStatusEl = document.getElementById('saveStatus');
+  const localMarkerKey = 'quiz_'+EXAM_ID+'_'+STATE.studentFullName;
+  function saveLocalFallback(){
+    localStorage.setItem(localMarkerKey, JSON.stringify(payload));
+    localStorage.setItem(localMarkerKey+'_n', String(intentosLocales(STATE.studentFullName)+1));
+    saveStatusEl.innerHTML='<i class="fa-solid fa-triangle-exclamation"></i> Sin conexión con el servidor. El resultado se guardó solo en este dispositivo.';
+    saveStatusEl.style.color='var(--red)';
+  }
+  function saveOK(){
+    const _n = intentosLocales(STATE.studentFullName)+1;
+    localStorage.setItem(localMarkerKey, JSON.stringify(payload));
+    localStorage.setItem(localMarkerKey+'_n', String(_n)); // marca SIEMPRE: un intento por dispositivo
+    saveStatusEl.innerHTML='<i class="fa-solid fa-circle-check"></i> Resultado guardado correctamente.';
+  }
+  if(!SUPABASE_CONFIGURED){
+    saveLocalFallback();
+  } else {
+    // Dedup en el momento de escribir: si ya existe registro remoto de este estudiante, no duplicar.
+    const nm = ((STATE.studentLastname||'')+', '+(STATE.studentName||'')).toUpperCase().trim();
+    const nmAlt = (((STATE.studentName||'')+' '+(STATE.studentLastname||'')).toUpperCase().trim());
+    supabaseGet('quiz_results?exam_id=eq.'+EXAM_ID+'&select=student_name,student_lastname')
+      .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(rows=>{
+        const dup = (rows||[]).filter(r=>{
+          const rn = ((r.student_lastname||'')+', '+(r.student_name||'')).toUpperCase().trim();
+          const rnAlt = ((r.student_name||'')+' '+(r.student_lastname||'')).toUpperCase().trim();
+          return rn === nm || rnAlt === nm || rn === nmAlt || rnAlt === nmAlt;
+        }).length >= MAX_ATTEMPTS;
+        if(dup){
+          localStorage.setItem(localMarkerKey, JSON.stringify(payload));
+          saveStatusEl.innerHTML='<i class="fa-solid fa-triangle-exclamation"></i> Ya usaste los intentos permitidos. No se guardó un intento adicional.';
+          saveStatusEl.style.color='var(--red)';
+          return null;
+        }
+        return supabaseSend('quiz_results', 'POST', sbRow).then(res=>{
+          if(!res.ok) throw new Error('HTTP '+res.status);
+          saveOK();
+        });
+      })
+      .catch(err=>{
+        // Si la verificación falló, aún así marcamos localmente para no permitir reintentos en este dispositivo
+        saveLocalFallback();
+        console.warn('Guardado Supabase:', err);
+      });
+  }
+}
+
+/* ═══════ RETROALIMENTACIÓN ═══════ */
+function toggleReview(){
+  const box = document.getElementById('review-box');
+  const btn = document.getElementById('btn-review');
+  if(box.style.display !== 'none'){
+    box.style.display = 'none';
+    btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Ver retroalimentación';
+    return;
+  }
+  var wrong = STATE.selectedQuestions
+    .map(function(q,i){return {q:q,i:i,sel:STATE.userAnswers[i]};})
+    .filter(function(x){return x.sel !== STATE.shuffledAnswers[x.i];});
+  if(!wrong.length){
+    box.innerHTML = '<p class="review-empty">Respondiste todas correctamente. Excelente trabajo.</p>';
+  } else {
+    var items = wrong.map(function(item){
+      var q = item.q, i = item.i, sel = item.sel;
+      var correctIdx = STATE.shuffledAnswers[i];
+      var opts = STATE.shuffledOptions[i];
+      var isCorrect = sel === correctIdx;
+
+      // Build option rows with SVG icons and explicit labels
+      var optionsHtml = opts.map(function(opt,oi){
+        var isC = oi === correctIdx;
+        var isS = oi === sel && !isCorrect;
+        var icon, tagHtml = '';
+
+        if(isC && isS){
+          icon = SVG_ICONS.correct;
+          tagHtml = '<span class="option-tag match">CORRECTA</span>';
+        } else if(isC){
+          icon = SVG_ICONS.correct;
+          tagHtml = '<span class="option-tag correct-tag">RESPUESTA CORRECTA</span>';
+        } else if(isS){
+          icon = SVG_ICONS.wrong;
+          tagHtml = '<span class="option-tag user">TU RESPUESTA</span>';
+        } else {
+          icon = SVG_ICONS.neutral;
+        }
+
+        return '<div class="option-row">' +
+          '<div class="option-icon">' + icon + '</div>' +
+          '<div class="option-content">' +
+            '<span class="option-letter-label">' + LETTERS[oi] + '.</span>' +
+            '<span class="option-text">' + escapeHtml(opt) + '</span>' +
+            tagHtml +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      // Lookup explanation from QUESTION_BANK
+      var explanation = '';
+      if(typeof QUESTION_BANK !== 'undefined'){
+        var found = QUESTION_BANK.find(function(bq){return bq.question === q.question;});
+        if(found && found.explanation) explanation = found.explanation;
+      }
+
+      var explanationHtml = explanation ?
+        '<div class="explanation-block">' +
+          '<div class="explanation-label">Explicación</div>' +
+          '<div class="explanation-text">' + escapeHtml(explanation) + '</div>' +
+        '</div>' : '';
+
+      return '<div class="review-item">' +
+        '<div class="review-q-header">' +
+          '<span class="review-q-num">' + (i+1) + '.</span>' +
+          '<span class="review-badge bad">Incorrecta</span>' +
+        '</div>' +
+        '<div class="review-q-text">' + escapeHtml(q.question) + '</div>' +
+        optionsHtml +
+        explanationHtml +
+      '</div>';
+    }).join('');
+
+    box.innerHTML = '<h3 class="review-head">Retroalimentación — ' + wrong.length + ' pregunta(s) a repasar</h3>' + items;
+  }
+  box.style.display = 'block';
+  btn.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Ocultar retroalimentación';
+}
+
+/* ═══════ PRINT PDF ═══════ */
+function printPDF(){
+  try {
+  if(!window.jspdf || !window.jspdf.jsPDF){ alertModal('jsPDF no se cargó. Verifica tu conexión a internet.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'mm',format:'a4'});
+  const W=210, ML=14, MR=196, CW=MR-ML;
+  const name = STATE.studentFullName;
+  const correct = STATE.userAnswers.filter((a,i)=> a === STATE.shuffledAnswers[i]).length;
+  const total = STATE.selectedQuestions.length;
+  const penaltyTotal = penaltyCount * 0.5;
+  const score10 = Math.max(0, correct / total * 10 - penaltyTotal).toFixed(1);
+  const wrong = STATE.selectedQuestions
+    .map((q,i)=>({q,i,sel:STATE.userAnswers[i],cIdx:STATE.shuffledAnswers[i],opts:STATE.shuffledOptions[i]}))
+    .filter(x=>x.sel !== x.cIdx);
+  const LETTERS = ['A','B','C','D'];
+
+  /* ── Color palette (from template) ── */
+  const C = {
+    navy:[31,42,90], burgundy:[142,27,58], gold:[217,177,75], blue:[46,116,181],
+    gris:[242,244,248], linea:[201,210,227], dark:[26,26,26],
+    verde:[30,122,60], verdeBg:[231,244,235], ambar:[154,106,0], ambarBg:[251,243,220],
+    rojo:[165,35,52], rojoBg:[251,233,236], white:[255,255,255]
+  };
+
+  /* ── Vector icon for options (replaces broken Unicode) ── */
+  function dibujarIconoOpcion(doc, cx, cy, r, tipo) {
+    var colores = { correcta:[30,123,79], incorrecta:[139,30,63], neutro:[196,201,212] };
+    var rgb = colores[tipo];
+    doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+    doc.circle(cx, cy, r, tipo === 'neutro' ? 'D' : 'F');
+    if (tipo !== 'neutro') {
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(Math.max(0.6, r * 0.18));
+      if (tipo === 'correcta') {
+        doc.line(cx - r*0.5, cy, cx - r*0.1, cy + r*0.4);
+        doc.line(cx - r*0.1, cy + r*0.4, cx + r*0.5, cy - r*0.4);
+      } else {
+        doc.line(cx - r*0.4, cy - r*0.4, cx + r*0.4, cy + r*0.4);
+        doc.line(cx - r*0.4, cy + r*0.4, cx + r*0.4, cy - r*0.4);
+      }
+    }
+  }
+
+  let y = 0;
+  let pageNum = 0;
+
+  function newPage(){
+    if(pageNum > 0){ doc.addPage(); }
+    pageNum++;
+    y = 0;
+    // Footer
+    doc.setDrawColor(...C.blue); doc.setLineWidth(1.2);
+    doc.line(ML, 280, MR, 280);
+    doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+    doc.setTextColor(...C.blue);
+    doc.text('Economía IB Nivel Medio – Mr. Alberto Ottati / Derechos reservados', ML, 284);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(120,120,120);
+    doc.text('Generado con el Sistema Hermes · ' + new Date().toLocaleDateString('es-EC'), MR, 284, {align:'right'});
+    // Page number
+    doc.text('Página ' + pageNum, W/2, 284, {align:'center'});
+  }
+
+  function checkPage(needed){
+    if(y + needed > 270){ newPage(); y = 20; }
+  }
+
+  function sectionTitle(num, title){
+    checkPage(14);
+    doc.setDrawColor(...C.gold); doc.setLineWidth(0.8);
+    doc.line(ML, y+11, MR, y+11);
+    doc.setFontSize(11); doc.setFont('helvetica','bold');
+    doc.setTextColor(...C.navy);
+    doc.text(title, ML+20, y+9);
+    // Burgundy circle with number
+    doc.setFillColor(...C.burgundy);
+    doc.circle(ML+6, y+7, 4, 'F');
+    doc.setFontSize(8); doc.setTextColor(255,255,255);
+    doc.text(String(num), ML+6, y+7, {align:'center', baseline:'middle'});
+    y += 14;
+  }
+
+  function metaRow(label, value, x, w){
+    doc.setFillColor(...C.gris);
+    doc.rect(x, y, w, 7, 'F');
+    doc.setDrawColor(...C.linea); doc.setLineWidth(0.3);
+    doc.rect(x, y, w, 7, 'S');
+    doc.setFontSize(8.5); doc.setFont('helvetica','bold');
+    doc.setTextColor(...C.navy);
+    doc.text(label, x+2, y+5);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(...C.dark);
+    doc.text(value, x+w*0.38, y+5);
+  }
+
+  function chip(text, type){
+    // Returns chip width for positioning
+    doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+    const tw = doc.getTextWidth(text) + 6;
+    if(type==='ok'){ doc.setFillColor(...C.verdeBg); doc.setDrawColor(...C.verde); doc.setTextColor(...C.verde); }
+    else if(type==='par'){ doc.setFillColor(...C.ambarBg); doc.setDrawColor(...C.ambar); doc.setTextColor(...C.ambar); }
+    else { doc.setFillColor(...C.rojoBg); doc.setDrawColor(...C.rojo); doc.setTextColor(...C.rojo); }
+    doc.roundedRect(0, 0, tw, 5.5, 2, 2, 'FD');
+    doc.text(text, 3, 4);
+    return tw;
+  }
+
+  /* ═══════ PAGE 1: HEADER ═══════ */
+  newPage();
+  // Navy header bar
+  doc.setFillColor(...C.navy); doc.rect(0, 0, W, 26, 'F');
+  doc.setFontSize(15); doc.setFont('helvetica','bold');
+  doc.setTextColor(255,255,255);
+  doc.text('Informe de Retroalimentación', ML, 11);
+  doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.setTextColor(...C.gold);
+  doc.text('ADA de refuerzo — Unidad 3 · 2026 – 2027', ML, 17);
+  doc.setFontSize(8);
+  doc.setTextColor(200,210,230);
+  doc.text('Economía · 2BGU', ML, 23);
+
+  // Gold accent line
+  doc.setDrawColor(...C.gold); doc.setLineWidth(1.5);
+  doc.line(0, 26, W, 26);
+  y = 32;
+
+  // Subtitle bar
+  doc.setFillColor(...C.navy);
+  doc.setFontSize(9.5); doc.setFont('helvetica','bold');
+  doc.setTextColor(255,255,255);
+  const subH = 9;
+  doc.roundedRect(ML, y-2, CW, subH, 2, 2, 'F');
+  doc.text('Resultado de la Evaluación — Refuerzo de la Unidad 3', ML+5, y+4);
+  y += subH + 4;
+
+  // Metadata table (3 columns)
+  const colW = CW/3;
+  metaRow('Estudiante', name, ML, colW);
+  metaRow('Curso', '2BGU — Economía', ML+colW, colW);
+  metaRow('Fecha', new Date().toLocaleDateString('es-EC'), ML+colW*2, colW);
+  y += 10;
+
+  // ═══════ SECTION 1: RESULTADO GENERAL ═══════
+  sectionTitle(1, 'Resumen del resultado');
+
+  // Score box (gold background)
+  const boxW = 70, boxH = 28;
+  const boxX = ML + (CW - boxW) / 2;
+  doc.setFillColor(253,249,238);
+  doc.setDrawColor(...C.gold); doc.setLineWidth(0.8);
+  doc.roundedRect(boxX, y, boxW, boxH, 4, 4, 'FD');
+
+  doc.setFontSize(26); doc.setFont('helvetica','bold');
+  doc.setTextColor(...C.navy);
+  doc.text(score10 + ' / 10', boxX + boxW/2, y+14, {align:'center'});
+  doc.setFontSize(9); doc.setFont('helvetica','normal');
+  doc.setTextColor(...C.burgundy);
+  doc.text(correct + ' correcta' + (correct!==1?'s':'') + ' de ' + total + ' preguntas', boxX + boxW/2, y+21, {align:'center'});
+
+  // Progress bar
+  const barX = boxX + 8, barW = boxW - 16, barY = y + 23.5, barH = 2;
+  doc.setFillColor(...C.gris); doc.roundedRect(barX, barY, barW, barH, 1, 1, 'F');
+  const pct = Math.max(0, correct / total - penaltyTotal / 10);
+  const col = pct >= 0.7 ? C.verde : pct >= 0.4 ? C.ambar : C.rojo;
+  doc.setFillColor(...col); doc.roundedRect(barX, barY, barW * pct, barH, 1, 1, 'F');
+
+  y += boxH + 6;
+
+  // Penalización en el PDF
+  if(penaltyCount > 0){
+    doc.setFontSize(8); doc.setFont('helvetica','bold');
+    doc.setTextColor(...C.rojo);
+    doc.text('Penalización por cambio de ventana: ' + penaltyCount + ' × 0.5 = ' + penaltyTotal.toFixed(1) + ' puntos restados.', ML, y+4);
+    y += 7;
+  }
+
+  // Summary chips
+  doc.setFontSize(8.5); doc.setFont('helvetica','bold');
+  doc.setTextColor(...C.navy);
+  doc.text('Respuestas correctas por posición de letra:', ML, y+4);
+  y += 7;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  const distA = STATE.userAnswers.filter((a,i)=> a===0 && a===STATE.shuffledAnswers[i]).length;
+  const distB = STATE.userAnswers.filter((a,i)=> a===1 && a===STATE.shuffledAnswers[i]).length;
+  const distC = STATE.userAnswers.filter((a,i)=> a===2 && a===STATE.shuffledAnswers[i]).length;
+  const distD = STATE.userAnswers.filter((a,i)=> a===3 && a===STATE.shuffledAnswers[i]).length;
+  doc.text('A correctas: ' + distA + '  |  B correctas: ' + distB + '  |  C correctas: ' + distC + '  |  D correctas: ' + distD, ML+4, y);
+  y += 5;
+
+  // ═══════ SECTION 2: RETROALIMENTACIÓN POR PREGUNTA ═══════
+  y += 4;
+  sectionTitle(2, 'Retroalimentación por pregunta');
+
+  STATE.selectedQuestions.forEach((q,i)=>{
+    const sel = STATE.userAnswers[i];
+    const cIdx = STATE.shuffledAnswers[i];
+    const opts = STATE.shuffledOptions[i];
+    const isCorrect = sel === cIdx;
+
+    checkPage(50);
+
+    // Question header line
+    const qLabel = (i+1) + '. ';
+    doc.setFontSize(9.5); doc.setFont('helvetica','bold');
+    doc.setTextColor(...C.navy);
+    doc.text(qLabel, ML, y+4);
+
+    // Chip
+    const chipX = ML + doc.getTextWidth(qLabel) + 2;
+    doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+    const chipText = isCorrect ? 'Correcta' : 'Incorrecta';
+    const chipW = doc.getTextWidth(chipText) + 6;
+    const chipType = isCorrect ? 'ok' : 'no';
+    if(chipType==='ok'){ doc.setFillColor(...C.verdeBg); doc.setDrawColor(...C.verde); doc.setTextColor(...C.verde); }
+    else { doc.setFillColor(...C.rojoBg); doc.setDrawColor(...C.rojo); doc.setTextColor(...C.rojo); }
+    doc.roundedRect(chipX, y+0.5, chipW, 5.5, 2, 2, 'FD');
+    doc.text(chipText, chipX + chipW/2, y+0.5 + 2.75, { align:'center', baseline:'middle' });
+    y += 8;
+
+    // Question text
+    doc.setFontSize(8.5); doc.setFont('helvetica','normal');
+    doc.setTextColor(...C.dark);
+    const qLines = doc.splitTextToSize(q.question, CW - 4);
+    doc.text(qLines, ML+2, y);
+    y += qLines.length * 3.8 + 2;
+
+    // Options
+    opts.forEach((opt, oi)=>{
+      checkPage(12);
+      const isC = oi === cIdx;
+      const isS = oi === sel && !isCorrect;
+      const iconType = isC ? 'correcta' : isS ? 'incorrecta' : 'neutro';
+
+      // Option background for correct/wrong
+      if(isC || isS){
+        doc.setFillColor(isC ? C.verdeBg[0] : C.rojoBg[0], isC ? C.verdeBg[1] : C.rojoBg[1], isC ? C.verdeBg[2] : C.rojoBg[2]);
+        doc.roundedRect(ML+1, y-3, CW-2, 5, 1, 1, 'F');
+      }
+
+      // Vector icon (no Unicode)
+      dibujarIconoOpcion(doc, ML+4.5, y-0.5, 2.2, iconType);
+
+      doc.setFontSize(8); doc.setFont('helvetica','bold');
+      doc.setTextColor(...C.dark);
+      doc.text(LETTERS[oi], ML+8, y);
+      doc.setFont('helvetica','normal');
+      doc.setTextColor(...C.dark);
+      const optLines = doc.splitTextToSize(opt, CW - 22);
+      doc.text(optLines, ML+16, y);
+      y += Math.max(1, optLines.length) * 3.6 + 0.8;
+    });
+
+    // Explanation — box wraps full content
+    if(q.explanation){
+      checkPage(15);
+      y += 1;
+      const expLines = doc.splitTextToSize(q.explanation, CW - 10);
+      const expBoxH = expLines.length * 3.2 + 10;
+      doc.setFillColor(C.gris[0], C.gris[1], C.gris[2]);
+      doc.setDrawColor(...C.linea); doc.setLineWidth(0.3);
+      doc.roundedRect(ML+1, y-2, CW-2, expBoxH, 1, 1, 'FD');
+      doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+      doc.setTextColor(...C.navy);
+      doc.text('Explicación:', ML+4, y+2);
+      y += 6;
+      doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+      doc.setTextColor(80,80,80);
+      doc.text(expLines, ML+3, y);
+      y += expLines.length * 3.2 + 2;
+    }
+
+    y += 4;
+  });
+
+  // ═══════ SECTION 3: ANÁLISIS DE ERRORES ═══════
+  if(wrong.length > 0){
+    checkPage(20);
+    sectionTitle(3, 'Análisis de errores (' + wrong.length + ' pregunta' + (wrong.length!==1?'s':'') + ')');
+
+    wrong.forEach((w, wi)=>{
+      checkPage(20);
+      doc.setFontSize(8.5); doc.setFont('helvetica','bold');
+      doc.setTextColor(...C.burgundy);
+      doc.text((wi+1) + '. Pregunta ' + (w.i+1), ML+2, y);
+      y += 5;
+
+      doc.setFontSize(8); doc.setFont('helvetica','normal');
+      doc.setTextColor(...C.dark);
+      const wqLines = doc.splitTextToSize(w.q.question, CW - 6);
+      doc.text(wqLines, ML+4, y);
+      y += wqLines.length * 3.5 + 2;
+
+      doc.setFontSize(7.5);
+      doc.setTextColor(...C.rojo);
+      const sUserAns = 'Tu respuesta: ' + LETTERS[w.sel] + ' — ' + w.opts[w.sel];
+      const sUserLines = doc.splitTextToSize(sUserAns, CW - 10);
+      doc.text(sUserLines, ML+6, y);
+      y += sUserLines.length * 3.5 + 1;
+      doc.setTextColor(...C.verde);
+      const sCorrAns = 'Respuesta correcta: ' + LETTERS[w.cIdx] + ' — ' + w.opts[w.cIdx];
+      const sCorrLines = doc.splitTextToSize(sCorrAns, CW - 10);
+      doc.text(sCorrLines, ML+6, y);
+      y += sCorrLines.length * 3.5 + 5;
+    });
+  }
+
+  // ═══════ SIGNATURES ═══════
+  checkPage(30);
+  y += 10;
+  doc.setDrawColor(...C.dark); doc.setLineWidth(0.5);
+  const sigW = CW/2 - 10;
+  // Left signature
+  doc.line(ML, y, ML+sigW, y);
+  doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.setTextColor(...C.navy);
+  doc.text('Mr. Alberto Ottati R.', ML + sigW/2, y+4, {align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(7);
+  doc.setTextColor(100,100,100);
+  doc.text('Docente Economía IB NM', ML + sigW/2, y+8, {align:'center'});
+  // Right signature
+  doc.line(ML+sigW+20, y, ML+sigW*2+20, y);
+  doc.setFont('helvetica','bold'); doc.setFontSize(8);
+  doc.setTextColor(...C.navy);
+  doc.text(name, ML+sigW+20+sigW/2, y+4, {align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(7);
+  doc.setTextColor(100,100,100);
+  doc.text('Estudiante 2BGU', ML+sigW+20+sigW/2, y+8, {align:'center'});
+
+  doc.save('Informe_Refuerzo_U3_2BGU_' + name.replace(/\s+/g,'_') + '.pdf');
+  } catch(e){ console.error('printPDF error:', e); alertModal('Error al generar PDF: ' + e.message); }
+}
+
+/* ═══════ GENERAR PDF PARA DOCENTE (desde datos guardados) ═══════ */
+function generateStudentPDF(row){
+  try {
+  if(!window.jspdf || !window.jspdf.jsPDF){ alertModal('jsPDF no se cargó.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'mm',format:'a4'});
+  const W=210, ML=14, MR=196, CW=MR-ML;
+  const name = (row.student_name||row.studentName||'') + ' ' + (row.student_lastname||row.studentLastname||'');
+  const correct = row.score || row.correct || 0;
+  const total = row.total || 0;
+  const score10 = Number(row.grade || row.score_10 || 0).toFixed(1);
+  const answers = row.answers || [];
+  const wrong = answers.filter(a => !a.ok);
+  const LETTERS = ['A','B','C','D'];
+
+  // Lookup explanations from QUESTION_BANK by matching question text
+  const explanationMap = {};
+  if(typeof QUESTION_BANK !== 'undefined'){
+    QUESTION_BANK.forEach(function(q){ explanationMap[q.question] = q.explanation || ''; });
+  }
+
+  const C = {
+    navy:[31,42,90], burgundy:[142,27,58], gold:[217,177,75], blue:[46,116,181],
+    gris:[242,244,248], linea:[201,210,227], dark:[26,26,26],
+    verde:[30,122,60], verdeBg:[231,244,235], ambar:[154,106,0], ambarBg:[251,243,220],
+    rojo:[165,35,52], rojoBg:[251,233,236], white:[255,255,255]
+  };
+
+  /* ── Vector icon for options (replaces broken Unicode) ── */
+  function dibujarIconoOpcion(doc, cx, cy, r, tipo) {
+    var colores = { correcta:[30,123,79], incorrecta:[139,30,63], neutro:[196,201,212] };
+    var rgb = colores[tipo];
+    doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+    doc.circle(cx, cy, r, tipo === 'neutro' ? 'D' : 'F');
+    if (tipo !== 'neutro') {
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(Math.max(0.6, r * 0.18));
+      if (tipo === 'correcta') {
+        doc.line(cx - r*0.5, cy, cx - r*0.1, cy + r*0.4);
+        doc.line(cx - r*0.1, cy + r*0.4, cx + r*0.5, cy - r*0.4);
+      } else {
+        doc.line(cx - r*0.4, cy - r*0.4, cx + r*0.4, cy + r*0.4);
+        doc.line(cx - r*0.4, cy + r*0.4, cx + r*0.4, cy - r*0.4);
+      }
+    }
+  }
+
+  let y = 0, pageNum = 0;
+
+  function newPage(){
+    if(pageNum > 0) doc.addPage();
+    pageNum++; y = 0;
+    doc.setDrawColor(...C.blue); doc.setLineWidth(1.2);
+    doc.line(ML, 280, MR, 280);
+    doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+    doc.setTextColor(...C.blue);
+    doc.text('Economía IB Nivel Medio – Mr. Alberto Ottati / Derechos reservados', ML, 284);
+    doc.setFont('helvetica','normal'); doc.setTextColor(120,120,120);
+    doc.text('Generado con el Sistema Hermes · ' + new Date().toLocaleDateString('es-EC'), MR, 284, {align:'right'});
+    doc.text('Página ' + pageNum, W/2, 284, {align:'center'});
+  }
+  function checkPage(n){ if(y+n>270){newPage();y=20;} }
+  function sectionTitle(num,title){
+    checkPage(14);
+    doc.setDrawColor(...C.gold); doc.setLineWidth(0.8);
+    doc.line(ML,y+11,MR,y+11);
+    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(...C.navy);
+    doc.text(title,ML+20,y+9);
+    doc.setFillColor(...C.burgundy);doc.circle(ML+6,y+7,4,'F');
+    doc.setFontSize(8);doc.setTextColor(255,255,255);
+    doc.text(String(num),ML+6,y+7,{align:'center',baseline:'middle'});
+    y+=14;
+  }
+  function metaRow(label,value,x,w){
+    doc.setFillColor(...C.gris);doc.rect(x,y,w,7,'F');
+    doc.setDrawColor(...C.linea);doc.setLineWidth(0.3);doc.rect(x,y,w,7,'S');
+    doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(...C.navy);doc.text(label,x+2,y+5);
+    doc.setFont('helvetica','normal');doc.setTextColor(...C.dark);doc.text(value,x+w*0.38,y+5);
+  }
+
+  /* ── PAGE 1: HEADER ── */
+  newPage();
+  doc.setFillColor(...C.navy);doc.rect(0,0,W,26,'F');
+  doc.setFontSize(15);doc.setFont('helvetica','bold');doc.setTextColor(255,255,255);
+  doc.text('Informe de Retroalimentación',ML,11);
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(...C.gold);
+  doc.text('ADA de refuerzo — Unidad 3 · 2026 – 2027',ML,17);
+  doc.setFontSize(8);doc.setTextColor(200,210,230);
+  doc.text('Economía · 2BGU',ML,23);
+  doc.setDrawColor(...C.gold);doc.setLineWidth(1.5);doc.line(0,26,W,26);
+  y=32;
+
+  doc.setFillColor(...C.navy);
+  doc.roundedRect(ML,y-2,CW,9,2,2,'F');
+  doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.setTextColor(255,255,255);
+  doc.text('Resultado de la Evaluación — Refuerzo de la Unidad 3',ML+5,y+4);
+  y+=13;
+
+  const colW=CW/3;
+  metaRow('Estudiante',name.trim(),ML,colW);
+  metaRow('Curso',(row.course||'2BGU')+' — Economía',ML+colW,colW);
+  metaRow('Fecha',row.created_at?new Date(row.created_at).toLocaleDateString('es-EC'):'-',ML+colW*2,colW);
+  y+=10;
+
+  /* ═══════ SECTION 1: RESUMEN DEL RESULTADO ═══════ */
+  sectionTitle(1,'Resumen del resultado');
+  const boxW=70,boxH=28,boxX=ML+(CW-boxW)/2;
+  doc.setFillColor(253,249,238);doc.setDrawColor(...C.gold);doc.setLineWidth(0.8);
+  doc.roundedRect(boxX,y,boxW,boxH,4,4,'FD');
+  doc.setFontSize(26);doc.setFont('helvetica','bold');doc.setTextColor(...C.navy);
+  doc.text(score10+' / 10',boxX+boxW/2,y+14,{align:'center'});
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(...C.burgundy);
+  doc.text(correct+' correcta'+(correct!==1?'s':'')+' de '+total+' preguntas',boxX+boxW/2,y+21,{align:'center'});
+  const barX=boxX+8,barW=boxW-16,barY=y+23.5,barH=2;
+  doc.setFillColor(...C.gris);doc.roundedRect(barX,barY,barW,barH,1,1,'F');
+  const pct=correct/total;const col=pct>=0.7?C.verde:pct>=0.4?C.ambar:C.rojo;
+  doc.setFillColor(...col);doc.roundedRect(barX,barY,barW*pct,barH,1,1,'F');
+  y+=boxH+6;
+
+  // Answer distribution
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(...C.navy);
+  doc.text('Respuestas correctas por posición de letra:',ML,y+4);
+  y+=7;
+  doc.setFont('helvetica','normal');doc.setFontSize(8);
+  const distA=answers.filter(a=>a.correct===0&&a.ok).length;
+  const distB=answers.filter(a=>a.correct===1&&a.ok).length;
+  const distC=answers.filter(a=>a.correct===2&&a.ok).length;
+  const distD=answers.filter(a=>a.correct===3&&a.ok).length;
+  doc.text('A correctas: '+distA+'  |  B correctas: '+distB+'  |  C correctas: '+distC+'  |  D correctas: '+distD,ML+4,y);
+  y+=5;
+
+  /* ═══════ SECTION 2: RETROALIMENTACIÓN POR PREGUNTA (con explicaciones) ═══════ */
+  y+=4;sectionTitle(2,'Retroalimentación por pregunta');
+  answers.forEach(function(a,i){
+    var isCorrect=a.ok;
+    checkPage(50);
+    // Question header + chip
+    doc.setFontSize(9.5);doc.setFont('helvetica','bold');doc.setTextColor(...C.navy);
+    doc.text((i+1)+'. ',ML,y+4);
+    var chipX=ML+doc.getTextWidth((i+1)+'. ')+2;
+    doc.setFontSize(7.5);doc.setFont('helvetica','bold');
+    var ct=isCorrect?'Correcta':'Incorrecta';
+    var tw=doc.getTextWidth(ct)+6;
+    if(isCorrect){doc.setFillColor(...C.verdeBg);doc.setDrawColor(...C.verde);doc.setTextColor(...C.verde);}
+    else{doc.setFillColor(...C.rojoBg);doc.setDrawColor(...C.rojo);doc.setTextColor(...C.rojo);}
+    doc.roundedRect(chipX,y+0.5,tw,5.5,2,2,'FD');doc.text(ct,chipX+tw/2,y+0.5+2.75,{align:'center',baseline:'middle'});y+=8;
+
+    // Question text
+    doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.setTextColor(...C.dark);
+    var qLines=doc.splitTextToSize(a.question,CW-4);doc.text(qLines,ML+2,y);y+=qLines.length*3.8+2;
+
+    // Options
+    if(a.options&&typeof a.correct==='number'){
+      a.options.forEach(function(opt,oi){
+        checkPage(12);
+        var isC=oi===a.correct;var isS=oi===a.selected&&!isCorrect;
+        var iconType=isC?'correcta':isS?'incorrecta':'neutro';
+        if(isC||isS){doc.setFillColor(isC?C.verdeBg[0]:C.rojoBg[0],isC?C.verdeBg[1]:C.rojoBg[1],isC?C.verdeBg[2]:C.rojoBg[2]);doc.roundedRect(ML+1,y-3,CW-2,5,1,1,'F');}
+        dibujarIconoOpcion(doc,ML+4.5,y-0.5,2.2,iconType);
+        doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(...C.dark);doc.text(LETTERS[oi],ML+8,y);
+        doc.setFont('helvetica','normal');doc.setTextColor(...C.dark);
+        var optLines=doc.splitTextToSize(opt,CW-22);doc.text(optLines,ML+16,y);y+=Math.max(1,optLines.length)*3.6+0.8;
+      });
+    }
+
+    // Explanation (lookup from QUESTION_BANK)
+    var explanation=explanationMap[a.question]||'';
+    if(explanation){
+      checkPage(15);
+      y+=1;
+      var expLines=doc.splitTextToSize(explanation,CW-10);
+      var expBoxH=expLines.length*3.2+10;
+      doc.setFillColor(C.gris[0],C.gris[1],C.gris[2]);
+      doc.setDrawColor(...C.linea);doc.setLineWidth(0.3);
+      doc.roundedRect(ML+1,y-2,CW-2,expBoxH,1,1,'FD');
+      doc.setFontSize(7.5);doc.setFont('helvetica','bold');doc.setTextColor(...C.navy);
+      doc.text('Explicación:',ML+4,y+2);
+      y+=6;
+      doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(80,80,80);
+      doc.text(expLines,ML+3,y);
+      y+=expLines.length*3.2+2;
+    }
+    y+=4;
+  });
+
+  /* ═══════ SECTION 3: ANÁLISIS DE ERRORES ═══════ */
+  if(wrong.length>0){
+    checkPage(20);
+    sectionTitle(3,'Análisis de errores ('+wrong.length+' pregunta'+(wrong.length!==1?'s':'')+')');
+
+    wrong.forEach(function(w,wi){
+      checkPage(20);
+      doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(...C.burgundy);
+      doc.text((wi+1)+'. Pregunta '+(answers.indexOf(w)+1),ML+2,y);
+      y+=5;
+
+      doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(...C.dark);
+      var wqLines=doc.splitTextToSize(w.question,CW-6);doc.text(wqLines,ML+4,y);
+      y+=wqLines.length*3.5+2;
+
+      // User answer (full text, wrapped)
+      doc.setFontSize(7.5);doc.setTextColor(...C.rojo);
+      var sUserAns='Tu respuesta: '+LETTERS[w.selected]+' — '+(w.options[w.selected]||'—');
+      var sUserLines=doc.splitTextToSize(sUserAns,CW-10);
+      doc.text(sUserLines,ML+6,y);y+=sUserLines.length*3.5+1;
+
+      // Correct answer (full text, wrapped)
+      doc.setTextColor(...C.verde);
+      var sCorrAns='Respuesta correcta: '+LETTERS[w.correct]+' — '+(w.options[w.correct]||'—');
+      var sCorrLines=doc.splitTextToSize(sCorrAns,CW-10);
+      doc.text(sCorrLines,ML+6,y);y+=sCorrLines.length*3.5+5;
+    });
+  }
+
+  /* ═══════ SIGNATURES ═══════ */
+  checkPage(30);
+  y+=10;
+  doc.setDrawColor(...C.dark);doc.setLineWidth(0.5);
+  var sigW=CW/2-10;
+  // Left signature
+  doc.line(ML,y,ML+sigW,y);
+  doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(...C.navy);
+  doc.text('Mr. Alberto Ottati R.',ML+sigW/2,y+4,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(100,100,100);
+  doc.text('Docente Economía IB NM',ML+sigW/2,y+8,{align:'center'});
+  // Right signature
+  doc.line(ML+sigW+20,y,ML+sigW*2+20,y);
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...C.navy);
+  doc.text(name.trim(),ML+sigW+20+sigW/2,y+4,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(100,100,100);
+  doc.text('Estudiante 2BGU',ML+sigW+20+sigW/2,y+8,{align:'center'});
+
+  doc.save('Informe_Refuerzo_U3_2BGU_'+name.trim().replace(/\s+/g,'_')+'.pdf');
+  } catch(e){ console.error('generateStudentPDF error:',e);alertModal('Error al generar PDF: '+e.message); }
+}
+
+/* ═══════ RANKING EN VIVO (top 10 por nota) ═══════ */
+const RANK_TOP_PATH = 'quiz_results?exam_id=eq.'+EXAM_ID+'&select=student_name,student_lastname,grade,total,timestamp&order=grade.desc,timestamp.asc&limit=10';
+
+function fetchTopRanking(){
+  return supabaseGet(RANK_TOP_PATH).then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); });
+}
+
+function rankMedal(pos){
+  if(pos===1) return '<i class="fa-solid fa-medal medal gold"></i>';
+  if(pos===2) return '<i class="fa-solid fa-medal medal silver"></i>';
+  if(pos===3) return '<i class="fa-solid fa-medal medal bronze"></i>';
+  return '';
+}
+
+function rankFullName(r){
+  const n = String(r.student_name||r.studentName||r.name||'').trim();
+  const l = String(r.student_lastname||r.studentLastname||r.lastname||'').trim();
+  return (l && n) ? (l+', '+n) : (n || l);
+}
+
+function rankShortDate(ts){
+  if(!ts) return '-';
+  const d = new Date(ts);
+  if(isNaN(d.getTime())) return '-';
+  return d.toLocaleDateString('es-EC', {day:'2-digit', month:'2-digit'});
+}
+
+/* ── Vista del docente (panel) ── */
+function loadTeacherRanking(){
+  if(!teacherAuthenticated) return;
+  const wrap = document.getElementById('teacher-table-wrap');
+  if(!SUPABASE_CONFIGURED){
+    wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Supabase no esta configurado. Revisa las credenciales en el codigo.</p>';
+    return;
+  }
+  wrap.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px"><i class="fa-solid fa-spinner fa-spin"></i> Cargando ranking...</p>';
+  fetchTopRanking()
+    .then(rows=>renderTeacherRanking(rows))
+    .catch(()=>{
+      wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Error de conexion con Supabase. Verifica que el proyecto este activo y las credenciales sean correctas.</p>';
+    });
+}
+
+function renderTeacherRanking(rows){
+  const wrap = document.getElementById('teacher-table-wrap');
+  if(!wrap) return;
+  let html = '<div class="teacher-rank-head"><h3><i class="fa-solid fa-ranking-star"></i> Ranking (Top 10 por nota)</h3>'
+    + '<button type="button" class="btn-back-table" onclick="loadTeacher()"><i class="fa-solid fa-table-list"></i> Volver a la tabla</button></div>';
+  if(!rows || !rows.length){
+    html += '<p class="rank-empty" style="text-align:center">No hay notas guardadas aún.</p>';
+    wrap.innerHTML = html;
+    return;
+  }
+  html += '<div class="teacher-ranking">';
+  rows.forEach((r,i)=>{
+    const pos = i+1;
+    html += '<div class="teacher-rank-row">'
+      + '<div class="rank-pos">'+rankMedal(pos)+'<span>'+pos+'</span></div>'
+      + '<div class="rank-name">'+escapeHtml(rankFullName(r))+'</div>'
+      + '<div class="rank-grade">'+Number(r.grade||0).toFixed(1)+' / 10</div>'
+      + '<div class="teacher-rank-date">'+escapeHtml(rankShortDate(r.timestamp))+'</div>'
+      + '</div>';
+  });
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+/* ═══════ PANEL DOCENTE ═══════ */
+let teacherAuthenticated = false;
+let currentTeacherRows = [];
+
+function openTeacherPanel(){ document.getElementById('teacherOverlay').classList.add('open'); }
+function closeTeacherPanel(){ document.getElementById('teacherOverlay').classList.remove('open'); }
+
+function authenticateTeacher(){
+  const key = document.getElementById('teacherKeyInput').value.trim();
+  if(key === TEACHER_KEY){
+    teacherAuthenticated = true;
+    document.getElementById('teacherContent').style.display = 'block';
+    loadTeacher();
+  } else {
+    alertModal('Clave incorrecta.');
+  }
+}
+
+function loadTeacher(){
+  if(!teacherAuthenticated) return;
+  loadMaxAttempts();
+  const wrap = document.getElementById('teacher-table-wrap');
+  if(!SUPABASE_CONFIGURED){
+    currentTeacherRows = [];
+    wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Supabase no esta configurado. Revisa las credenciales en el codigo.</p>';
+    return;
+  }
+  supabaseGet('quiz_results?exam_id=eq.'+EXAM_ID+'&select=*&order=timestamp.desc')
+    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(rows=>{
+      currentTeacherRows = rows;
+      renderTeacherTable(rows);
+      // Reaplicar el filtro activo si el docente ya está filtrando
+      const f = document.getElementById('teacherFilter');
+      if(f && f.value.trim()) filterTeacher();
+    })
+    .catch(()=>{
+      currentTeacherRows = [];
+      wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Error de conexion con Supabase. Verifica que el proyecto este activo y las credenciales sean correctas.</p>';
+    });
+  // Sincronizar botón de estado con el servidor (evita que "Abrir quiz" cierre por error)
+  supabaseGet('quiz_config?exam_id=eq.'+EXAM_ID+'&select=open')
+    .then(r=> r.ok ? r.json() : null)
+    .then(rows=>{
+      if(!rows) return;
+      const isOpen = !!(rows.length && rows[0].open);
+      const hasRow = rows.length > 0;
+      document.getElementById('statusIcon').className = isOpen ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
+      document.getElementById('statusText').textContent = hasRow ? (isOpen ? 'Cerrar quiz' : 'Abrir quiz') : 'Abrir quiz';
+    }).catch(()=>{});
+}
+
+function renderTeacherTable(rows){
+  const wrap = document.getElementById('teacher-table-wrap');
+  if(!rows.length){ wrap.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px">No hay notas guardadas.</p>'; return; }
+  let html = '<table><thead><tr><th>Nombre</th><th>Apellido</th><th>Curso</th><th>Intento</th><th>Correctas</th><th>Total</th><th>Nota /10</th><th>Fecha</th><th></th></tr></thead><tbody>';
+  rows.forEach((r,idx)=>{
+    const name = r.student_name||r.studentName||r.name||'';
+    const last = r.student_lastname||r.studentLastname||r.lastname||'';
+    const date = r.timestamp||r.created_at||r.savedAt||'';
+    const dateStr = date ? new Date(date).toLocaleString('es-EC') : '-';
+    html += `<tr>
+      <td>${escapeHtml(name)}</td><td>${escapeHtml(last)}</td><td>${escapeHtml(r.course||'2BGU')}</td><td>${r.attempt||1}</td>
+      <td>${r.score||r.correct||0}</td><td>${r.total||0}</td><td><strong>${Number(r.grade||r.score_10||0).toFixed(1)}</strong></td>
+      <td>${dateStr}</td>
+      <td style="white-space:nowrap">
+        <button class="btn-del btn-pdf-row" data-pdfidx="${idx}" title="Descargar PDF retroalimentación"><i class="fa-solid fa-file-pdf"></i></button>
+        <button class="btn-del" data-del="${idx}" title="Desbloquear / eliminar"><i class="fa-solid fa-trash"></i></button>
+      </td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+
+  // Delete handlers (desbloqueo individual: DELETE en Supabase + limpieza de localStorage)
+  wrap.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const idx = parseInt(this.getAttribute('data-del'));
+      if(isNaN(idx)) return;
+      const row = rows[idx]; // rows = arreglo RENDERIZADO (respeta el filtro)
+      if(!row || !row.id){ alertModal('Este registro no tiene id (guardado local).'); return; }
+      confirmModal('Se eliminará el registro de ' + escapeHtml((row.student_name||'')+' '+(row.student_lastname||'')) + ' y se desbloqueará su intento. ¿Continuar?', async function(){
+        try {
+          const res = await supabaseSend('quiz_results?id=eq.'+row.id, 'DELETE');
+          if(!res.ok) throw new Error('HTTP '+res.status);
+          // Limpiar localStorage del estudiante (ambos formatos de nombre)
+          const nm = row.student_name||row.studentName||row.name||'';
+          const lm = row.student_lastname||row.studentLastname||row.lastname||'';
+          localStorage.removeItem('quiz_'+EXAM_ID+'_'+(lm+', '+nm));
+          localStorage.removeItem('quiz_'+EXAM_ID+'_'+(nm+' '+lm));
+            localStorage.removeItem('quiz_'+EXAM_ID+'_'+(lm+', '+nm)+'_n');
+            localStorage.removeItem('quiz_'+EXAM_ID+'_'+(nm+' '+lm)+'_n');
+          loadTeacher();
+        } catch(e){
+          alertModal('Error al eliminar: '+e.message);
+        }
+      });
+    });
+  });
+
+  // PDF handlers
+  wrap.querySelectorAll('[data-pdfidx]').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      const idx = parseInt(this.getAttribute('data-pdfidx'));
+      if(rows[idx]){
+        generateStudentPDF(rows[idx]); // rows = arreglo RENDERIZADO (respeta el filtro)
+      }
+    });
+  });
+}
+
+function filterTeacher(){
+  const q = document.getElementById('teacherFilter').value.toLowerCase();
+  const filtered = currentTeacherRows.filter(r=>{
+    const name = ((r.student_name||r.studentName||r.name||'')+' '+(r.student_lastname||r.studentLastname||r.lastname||'')).toLowerCase();
+    return name.includes(q);
+  });
+  renderTeacherTable(filtered);
+}
+
+function clearAllGrades(){
+  confirmModal('Borrar TODAS las calificaciones de este quiz? Esta accion no se puede deshacer.', async function(){
+    try {
+      const res = await supabaseSend('quiz_results?exam_id=eq.'+EXAM_ID, 'DELETE');
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      // Limpiar localStorage de todos los estudiantes de este quiz
+      const prefix = 'quiz_'+EXAM_ID+'_';
+      const keys = [];
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(k && k.indexOf(prefix) === 0) keys.push(k);
+      }
+      keys.forEach(k=>localStorage.removeItem(k));
+      loadTeacher();
+    } catch(e){
+      alertModal('Error al borrar: '+e.message);
+    }
+  });
+}
+
+function exportExcel(){
+  if(!currentTeacherRows.length){ alertModal('No hay notas para exportar.'); return; }
+  const header = ['Nombre','Apellido','Curso','Intento','Correctas','Total','Nota /10','Fecha'];
+  const esc = v=>{ const s=String(v??''); return /[",\n;]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+  const lines = [header.join(',')];
+  currentTeacherRows.forEach(r=>{
+    lines.push([esc(r.student_name||r.studentName||r.name), esc(r.student_lastname||r.studentLastname||r.lastname), esc(r.course||'2BGU'), (r.attempt||1),
+      r.score||r.correct||0, r.total||0, Number(r.grade||r.score_10||0).toFixed(1),
+      new Date(r.timestamp||r.created_at||r.savedAt||Date.now()).toLocaleString('es-EC')].join(','));
+  });
+  const csv = '\uFEFF'+lines.join('\r\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'calificaciones_refuerzo_u3_2bgu.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function toggleQuizStatus(){
+  try {
+    if(!SUPABASE_CONFIGURED) throw new Error('Supabase no esta configurado');
+    const res = await supabaseGet('quiz_config?exam_id=eq.'+EXAM_ID+'&select=open');
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const rows = await res.json();
+    const newOpen = !(rows.length && rows[0].open);
+    const res2 = await supabaseSend('quiz_config?on_conflict=exam_id', 'POST', { exam_id: EXAM_ID, open: newOpen }, 'resolution=merge-duplicates');
+    if(!res2.ok) throw new Error('HTTP '+res2.status);
+    document.getElementById('statusIcon').className = newOpen ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
+    document.getElementById('statusText').textContent = newOpen ? 'Cerrar quiz' : 'Abrir quiz';
+  } catch(e){
+    alertModal('No se pudo cambiar el estado del quiz: '+e.message+'. Verifica la conexion con Supabase.');
+  }
+}
+</script>
+</body>
+</html>
