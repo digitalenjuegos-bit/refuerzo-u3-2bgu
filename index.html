@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
 /* ═══ PALETA IB ACTUALIZADA (patrón aprendido) ═══ */
@@ -1074,15 +1073,52 @@ const EXAM_ID = 'refuerzo-u3-2bgu';
 /* ═══ SUPABASE (guardado de notas) ═══
    Proyecto Supabase compartido con quiz-comercio-internacional.
    Las notas se guardan en la tabla quiz_results con exam_id propio. */
-const SUPABASE_URL = 'https://iitjrrnndfxqjzkggtog.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_90BfL8Ncg9WyceCdTE5Wzg_9kj14ubv';
-const SUPABASE_CONFIGURED = SUPABASE_URL.indexOf('tu-proyecto') === -1 && SUPABASE_ANON_KEY.indexOf('tu-anon-key') === -1 && SUPABASE_URL.indexOf('PEGAR') === -1 && SUPABASE_ANON_KEY.indexOf('PEGAR') === -1;
-function supabaseHeaders(){ return { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer '+SUPABASE_ANON_KEY, 'Content-Type': 'application/json' }; }
-function supabaseGet(path){ return fetch(SUPABASE_URL+'/rest/v1/'+path, { headers: supabaseHeaders(), cache: 'no-store' }); }
-function supabaseSend(path, method, body, prefer){
-  const h = supabaseHeaders();
-  if(prefer) h['Prefer'] = prefer;
-  return fetch(SUPABASE_URL+'/rest/v1/'+path, { method: method, headers: h, body: body ? JSON.stringify(body) : undefined });
+const FB_URL = 'https://coevaluacionhistoria-default-rtdb.firebaseio.com/quiz_refuerzo';
+const SUPABASE_CONFIGURED = true;
+/* Base de datos: Firebase Realtime Database (proyecto coevaluacionhistoria), por REST.
+   Las dos funciones conservan el nombre y la forma de las consultas de la plantilla
+   original; aquí se traducen a rutas de Firebase:
+     quiz_refuerzo/results/<EXAM_ID>/<id>   una entrega por nodo
+     quiz_refuerzo/config/<clave>           { exam_id, open } */
+function fbKey(s){ return String(s).replace(/[.#$\[\]\/]/g,'_'); }
+function fbResp(status, data){ return { ok: status>=200 && status<300, status: status, json: function(){ return Promise.resolve(data); }, text: function(){ return Promise.resolve(JSON.stringify(data)); } }; }
+function fbParams(path){ const o={}; const i=path.indexOf('?'); if(i<0) return o; path.slice(i+1).split('&').forEach(function(p){ if(!p) return; const j=p.indexOf('='); o[decodeURIComponent(p.slice(0,j))]=decodeURIComponent(p.slice(j+1)); }); return o; }
+function fbFetch(sub, opt){ return fetch(FB_URL+'/'+sub+'.json', Object.assign({ cache: 'no-store' }, opt||{})); }
+function fbRead(sub, map){ return fbFetch(sub).then(function(r){ return r.json().then(function(d){ return r.ok ? fbResp(200, map(d)) : fbResp(r.status, []); }); }); }
+function supabaseGet(path){
+  const table = path.split('?')[0], p = fbParams(path), ex = p.exam_id || '';
+  if(table === 'quiz_results'){
+    return fbRead('results/'+fbKey(ex.replace(/^eq\./,'')), function(d){
+      let rows = Object.keys(d||{}).map(function(k){ return Object.assign({}, d[k], { id: k }); });
+      if(p.order){
+        const ord = p.order.split(',').map(function(o){ const t=o.split('.'); return [t[0], t[1]==='desc' ? -1 : 1]; });
+        rows.sort(function(a,b){ for(const o of ord){ const x=a[o[0]], y=b[o[0]]; if(x===y) continue; return (x>y ? 1 : -1)*o[1]; } return 0; });
+      }
+      if(p.limit) rows = rows.slice(0, parseInt(p.limit,10));
+      return rows;
+    });
+  }
+  if(ex.indexOf('like.') === 0){
+    const pre = ex.slice(5).replace(/\*$/,'');
+    return fbRead('config', function(d){ return Object.keys(d||{}).map(function(k){ return d[k]; }).filter(function(x){ return x && String(x.exam_id).indexOf(pre) === 0; }); });
+  }
+  return fbRead('config/'+fbKey(ex.replace(/^eq\./,'')), function(d){ return d ? [d] : []; });
+}
+function supabaseSend(path, method, body){
+  const table = path.split('?')[0], p = fbParams(path);
+  const fin = function(r){ return fbResp(r.status, []); };
+  if(table === 'quiz_results'){
+    if(method === 'POST') return fbFetch('results/'+fbKey(body.exam_id || EXAM_ID), { method: 'POST', body: JSON.stringify(body) }).then(fin);
+    if(method === 'DELETE'){
+      if(p.id) return fbFetch('results/'+fbKey(EXAM_ID)+'/'+fbKey(p.id.replace(/^eq\./,'')), { method: 'DELETE' }).then(fin);
+      return fbFetch('results/'+fbKey((p.exam_id||'').replace(/^eq\./,'') || EXAM_ID), { method: 'DELETE' }).then(fin);
+    }
+  }
+  if(table === 'quiz_config'){
+    const patch = {}; (Array.isArray(body) ? body : [body]).forEach(function(r){ patch[fbKey(r.exam_id)] = r; });
+    return fbFetch('config', { method: 'PATCH', body: JSON.stringify(patch) }).then(fin);
+  }
+  return Promise.resolve(fbResp(400, []));
 }
 /* ═══ INTENTOS PERMITIDOS (parametrizable desde el Panel Docente) ═══
    Se guarda en quiz_config, sin cambiar el esquema: una fila por valor, con
@@ -1103,7 +1139,7 @@ function loadMaxAttempts(){
 }
 async function saveMaxAttempts(){
   try {
-    if(!SUPABASE_CONFIGURED) throw new Error('Supabase no esta configurado');
+    if(!SUPABASE_CONFIGURED) throw new Error('La base de datos no esta configurada');
     const n = parseInt(document.getElementById('maxAttemptsSel').value,10) || 1;
     const filas = [1,2,3,4,5].map(i=>({ exam_id: EXAM_ID+'::intentos='+i, open: i===n }));
     const res = await supabaseSend('quiz_config?on_conflict=exam_id', 'POST', filas, 'resolution=merge-duplicates');
@@ -2276,14 +2312,14 @@ function loadTeacherRanking(){
   if(!teacherAuthenticated) return;
   const wrap = document.getElementById('teacher-table-wrap');
   if(!SUPABASE_CONFIGURED){
-    wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Supabase no esta configurado. Revisa las credenciales en el codigo.</p>';
+    wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">La base de datos no esta configurada. Revisa las credenciales en el codigo.</p>';
     return;
   }
   wrap.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px"><i class="fa-solid fa-spinner fa-spin"></i> Cargando ranking...</p>';
   fetchTopRanking()
     .then(rows=>renderTeacherRanking(rows))
     .catch(()=>{
-      wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Error de conexion con Supabase. Verifica que el proyecto este activo y las credenciales sean correctas.</p>';
+      wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Error de conexion con la base de datos. Verifica que el proyecto de Firebase este activo y las credenciales sean correctas.</p>';
     });
 }
 
@@ -2335,7 +2371,7 @@ function loadTeacher(){
   const wrap = document.getElementById('teacher-table-wrap');
   if(!SUPABASE_CONFIGURED){
     currentTeacherRows = [];
-    wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Supabase no esta configurado. Revisa las credenciales en el codigo.</p>';
+    wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">La base de datos no esta configurada. Revisa las credenciales en el codigo.</p>';
     return;
   }
   supabaseGet('quiz_results?exam_id=eq.'+EXAM_ID+'&select=*&order=timestamp.desc')
@@ -2349,7 +2385,7 @@ function loadTeacher(){
     })
     .catch(()=>{
       currentTeacherRows = [];
-      wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Error de conexion con Supabase. Verifica que el proyecto este activo y las credenciales sean correctas.</p>';
+      wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px">Error de conexion con la base de datos. Verifica que el proyecto de Firebase este activo y las credenciales sean correctas.</p>';
     });
   // Sincronizar botón de estado con el servidor (evita que "Abrir quiz" cierre por error)
   supabaseGet('quiz_config?exam_id=eq.'+EXAM_ID+'&select=open')
@@ -2472,7 +2508,7 @@ function exportExcel(){
 
 async function toggleQuizStatus(){
   try {
-    if(!SUPABASE_CONFIGURED) throw new Error('Supabase no esta configurado');
+    if(!SUPABASE_CONFIGURED) throw new Error('La base de datos no esta configurada');
     const res = await supabaseGet('quiz_config?exam_id=eq.'+EXAM_ID+'&select=open');
     if(!res.ok) throw new Error('HTTP '+res.status);
     const rows = await res.json();
@@ -2482,7 +2518,7 @@ async function toggleQuizStatus(){
     document.getElementById('statusIcon').className = newOpen ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open';
     document.getElementById('statusText').textContent = newOpen ? 'Cerrar quiz' : 'Abrir quiz';
   } catch(e){
-    alertModal('No se pudo cambiar el estado del quiz: '+e.message+'. Verifica la conexion con Supabase.');
+    alertModal('No se pudo cambiar el estado del quiz: '+e.message+'. Verifica la conexion con la base de datos.');
   }
 }
 </script>
